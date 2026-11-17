@@ -116,6 +116,7 @@ async def render_full_video(fps=30):
         subprocess.run(["git", "commit", "-m", "Auto-Upload: Aktualisiertes Video Mond_Projekt_Teil_1.mp4"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "ki-videos"], cwd=WORKSPACE, check=False)
+        subprocess.run(["gh", "release", "upload", "teil-1", out_mp4, "--clobber", "--repo", "asthreaa/ki-videos"], cwd=WORKSPACE, check=False)
         print("Automatically pushed video to https://github.com/asthreaa/ki-videos")
     except Exception as e:
         print("Git auto-push warning:", e)
