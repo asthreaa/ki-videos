@@ -21,43 +21,40 @@ def load_env():
                     k, v = line.split("=", 1)
                     os.environ[k.strip()] = v.strip()
 
-# Updated script:
-# - Part 1 has ONLY the founder (1 Bewohner); followers arrive in Part 2!
-# - Every new follower automatically flies to the Moon in Part 2, gets their OWN capsule, and helps clean!
-# - The 500 € vote is for base upgrades (Power-Sauger, Staub-Raffinerie, Mond-Dönerladen), NOT for buying follower capsules!
+# Calm, soothing ~60s script (spoken unhurriedly by Christian - Warm & Captivating):
 SEGMENTS = [
     {
         "id": "hook_closeup",
-        "text": "Tag eins auf dem völlig verdreckten Mond! Willkommen in unserer allerersten Mond-Basis!"
+        "text": "Tag eins auf dem verdreckten Mond. Willkommen in unserer ersten Basis."
     },
     {
         "id": "overview_goal",
-        "text": "Noch bin ich hier oben komplett allein – aber ab Teil zwei fliegt jeder neue Follower automatisch mit auf den Mond, kriegt sofort seine eigene Kapsel und hilft beim Saubermachen!"
+        "text": "Noch bin ich ganz allein. Aber in Teil zwei fliegt jeder neue Follower mit auf den Mond, bekommt eine eigene Kapsel und hilft beim Saubermachen."
     },
     {
         "id": "stages_grid",
-        "text": "Deine eigene Kapsel kannst du dann in zwölf Stufen ausbauen – vom einfachen Starter-Zelt bis zur gigantischen Mond-Krone!"
+        "text": "Deine Kapsel kannst du in zwölf Stufen ausbauen – vom Zelt bis zur Mond-Krone."
     },
     {
         "id": "dust_counter",
-        "text": "Ich fege jetzt den ersten Bereich vor der Schleuse frei und verkaufe den Staub direkt am Terminal! Das bringt uns sofort fünfhundert Euro! Und pro Kommentar bekommst du einen Ausbau-Punkt für deine Kapsel!"
+        "text": "Ich fege jetzt vor der Schleuse und verkaufe den Staub am Terminal. Das bringt fünfhundert Euro. Und pro Kommentar gibt es einen Punkt für deine Kapsel."
     },
     {
         "id": "id_card",
-        "text": "Jeder Follower bekommt außerdem seinen eigenen Mond-Ausweis! Schreib deinen Berufswunsch und Nachbarwunsch jetzt in die Kommentare!"
+        "text": "Jeder Follower erhält auch seinen Mond-Ausweis. Schreib deinen Berufswunsch in die Kommentare."
     },
     {
         "id": "vote_abc",
-        "text": "Was bauen wir in Teil zwei von unseren fünfhundert Euro zuerst? A: Das Power-Sauger-Lager, B: Die Staub-Raffinerie für doppeltes Geld, oder C: Den ersten Mond-Dönerladen? Schreib A, B oder C in die Kommentare!"
+        "text": "Was bauen wir von den fünfhundert Euro zuerst? A: Das Power-Sauger-Lager, B: Die Staub-Raffinerie, oder C: Den Mond-Dönerladen? Schreib A, B oder C."
     },
     {
         "id": "mystery_outro",
-        "text": "Doch wartet mal: Unter dem Staub hab ich gerade diesen gesperrten Ausweis gefunden: Sektor Sieben – Zutritt nur für Personal! Irgendjemand war schon vor uns hier oben... Folg rein für Teil zwei!"
+        "text": "Doch schaut mal: Unter dem Staub lag dieser Ausweis. Sektor Sieben – nur für Personal. Wir sind nicht allein... Folg rein für Teil zwei."
     }
 ]
 
-# Native German conversational male voice on ElevenLabs ("Charlie Chatlin - Real & Casual")
-VOICE_ID = "vmVmHDKBkkCgbLVIOJRb"
+# Warm, calm, soothing German storyteller voice ("Christian - Warm and Captivating")
+VOICE_ID = "NBqeXKdZHweef6y0B67V"
 MODEL_ID = "eleven_multilingual_v2"
 
 def generate_elevenlabs_tts():
@@ -72,14 +69,14 @@ def generate_elevenlabs_tts():
         "text": full_text,
         "model_id": MODEL_ID,
         "voice_settings": {
-            "stability": 0.42,
-            "similarity_boost": 0.82,
-            "style": 0.40,
+            "stability": 0.68,
+            "similarity_boost": 0.80,
+            "style": 0.12,
             "use_speaker_boost": True,
-            "speed": 1.20
+            "speed": 1.05
         }
     }
-    print("Requesting ElevenLabs TTS with character-level timestamps...")
+    print("Requesting ElevenLabs TTS (Christian - Warm & Calm) with character-level timestamps...")
     r = requests.post(
         url,
         headers={"xi-api-key": api_key, "Content-Type": "application/json"},
@@ -95,7 +92,6 @@ def generate_elevenlabs_tts():
     with open(mp3_path, "wb") as f:
         f.write(mp3_bytes)
 
-    # Convert ElevenLabs exact character timestamps into exact word timestamps
     align = data["alignment"]
     chars = align["characters"]
     starts = align["character_start_times_seconds"]
@@ -144,7 +140,7 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
     n_samples = int(duration_sec * sample_rate)
     audio = np.zeros(n_samples, dtype=np.float32)
 
-    def add_tone(start_s, dur_s, f_start, f_end, vol=0.14, wave_type="sine"):
+    def add_tone(start_s, dur_s, f_start, f_end, vol=0.10, wave_type="sine"):
         i0 = int(start_s * sample_rate)
         n = int(dur_s * sample_rate)
         if i0 >= n_samples or n <= 0:
@@ -159,10 +155,10 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
             sig = 2 * np.abs(2 * (phase / (2 * np.pi) - np.floor(phase / (2 * np.pi) + 0.5))) - 1
         else:
             sig = np.sin(phase)
-        env = np.exp(-3.8 * t / dur_s) * np.minimum(1.0, t / 0.008)
+        env = np.exp(-3.8 * t / dur_s) * np.minimum(1.0, t / 0.01)
         audio[i0:i0+n] += vol * sig * env
 
-    def add_whoosh(start_s, dur_s=0.42, vol=0.18):
+    def add_whoosh(start_s, dur_s=0.42, vol=0.13):
         i0 = int(start_s * sample_rate)
         n = int(dur_s * sample_rate)
         if i0 >= n_samples or n <= 0:
@@ -171,29 +167,30 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
         t = np.linspace(0, dur_s, n, endpoint=False)
         rng = np.random.default_rng(int(start_s * 100) + 7)
         noise = rng.normal(0, 1, n)
-        kernel = np.ones(45) / 45.0
+        kernel = np.ones(55) / 55.0
         filtered = np.convolve(noise, kernel, mode="same")
-        sweep = np.sin(2 * np.pi * np.linspace(140, 520, n) * t) * 0.4
+        sweep = np.sin(2 * np.pi * np.linspace(120, 420, n) * t) * 0.35
         env = np.sin(np.pi * t / dur_s) ** 1.4
         audio[i0:i0+n] += vol * (filtered + sweep) * env
 
-    def add_mystery_boom(start_s, dur_s=2.2, vol=0.22):
+    def add_mystery_boom(start_s, dur_s=2.2, vol=0.16):
         i0 = int(start_s * sample_rate)
         n = int(dur_s * sample_rate)
         if i0 >= n_samples or n <= 0:
             return
         n = min(n, n_samples - i0)
         t = np.linspace(0, dur_s, n, endpoint=False)
-        freqs = np.linspace(95, 38, n)
+        freqs = np.linspace(88, 36, n)
         phase = 2 * np.pi * np.cumsum(freqs) / sample_rate
-        sig = np.sin(phase) + 0.35 * np.sin(phase * 1.5)
+        sig = np.sin(phase) + 0.3 * np.sin(phase * 1.5)
         env = np.exp(-2.2 * t / dur_s) * np.minimum(1.0, t / 0.02)
         audio[i0:i0+n] += vol * sig * env
 
+    # Soft, calming ambient space pad
     t_all = np.linspace(0, duration_sec, n_samples, endpoint=False)
     pad = (
-        0.012 * np.sin(2 * np.pi * 110.0 * t_all)
-        + 0.008 * np.sin(2 * np.pi * 164.81 * t_all)
+        0.010 * np.sin(2 * np.pi * 110.0 * t_all)
+        + 0.007 * np.sin(2 * np.pi * 164.81 * t_all)
     )
     audio += pad
 
@@ -203,44 +200,44 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
                 return w["start"]
         return None
 
-    t_overview = find_word_time("Noch", 2.5) or 6.0
-    t_stages = find_word_time("Deine", 12.0) or 15.6
-    t_terminal = find_word_time("fege", 18.0) or 22.2
-    t_budget = find_word_time("fünfhundert", 22.0) or 27.4
-    t_punkt = find_word_time("Ausbau-Punkt", 26.0) or 29.2
-    t_ausweis = find_word_time("Mond-Ausweis", 30.0) or 32.6
-    t_vote = find_word_time("Was", 34.0) or 37.0
-    t_opt_a = find_word_time("Power-Sauger", 38.0) or 40.7
-    t_opt_b = find_word_time("Staub-Raffinerie", 40.0) or 42.7
-    t_opt_c = find_word_time("Mond-Dönerladen", 43.0) or 46.1
-    t_mystery = find_word_time("wartet", 47.0) or 50.4
-    t_sektor7 = find_word_time("Sektor", 50.0) or 54.0
-    t_outro = find_word_time("Folg", 55.0) or 59.3
+    t_overview = find_word_time("Noch", 2.5) or 5.5
+    t_stages = find_word_time("Deine", 10.0) or 15.0
+    t_terminal = find_word_time("fege", 15.0) or 21.0
+    t_budget = find_word_time("fünfhundert", 18.0) or 26.5
+    t_punkt = find_word_time("Punkt", 22.0) or 29.5
+    t_ausweis = find_word_time("Mond-Ausweis", 26.0) or 34.0
+    t_vote = find_word_time("Was", 30.0) or 39.0
+    t_opt_a = find_word_time("Power-Sauger", 33.0) or 42.5
+    t_opt_b = find_word_time("Staub-Raffinerie", 35.0) or 45.0
+    t_opt_c = find_word_time("Mond-Dönerladen", 37.0) or 47.5
+    t_mystery = find_word_time("schaut", 42.0) or 51.0
+    t_sektor7 = find_word_time("Sektor", 45.0) or 54.5
+    t_outro = find_word_time("Folg", 48.0) or (duration_sec - 2.5)
 
-    add_tone(0.05, 0.22, 440, 880, vol=0.14, wave_type="triangle")
-    add_whoosh(t_overview - 0.2, 0.42, vol=0.18)
+    add_tone(0.05, 0.22, 440, 660, vol=0.10, wave_type="triangle")
+    add_whoosh(t_overview - 0.2, 0.42, vol=0.13)
 
-    add_whoosh(t_stages - 0.25, 0.35, vol=0.15)
+    add_whoosh(t_stages - 0.25, 0.35, vol=0.11)
     for i in range(12):
-        freq = 380 + i * 48
-        add_tone(t_stages + 0.08 + i * 0.26, 0.11, freq, freq * 1.25, vol=0.12, wave_type="triangle")
+        freq = 360 + i * 42
+        add_tone(t_stages + 0.1 + i * 0.28, 0.11, freq, freq * 1.2, vol=0.09, wave_type="triangle")
 
-    add_whoosh(t_terminal - 0.2, 0.35, vol=0.15)
+    add_whoosh(t_terminal - 0.2, 0.35, vol=0.11)
     for i in range(3):
-        add_tone(t_budget - 0.3 + i * 0.32, 0.15, 880 + i * 220, 1100 + i * 220, vol=0.14, wave_type="sine")
-    add_tone(t_punkt, 0.2, 587.33, 1174.66, vol=0.14, wave_type="triangle")
+        add_tone(t_budget - 0.2 + i * 0.32, 0.15, 780 + i * 180, 980 + i * 180, vol=0.10, wave_type="sine")
+    add_tone(t_punkt, 0.2, 523.25, 1046.5, vol=0.10, wave_type="triangle")
 
-    add_whoosh(t_ausweis - 0.25, 0.35, vol=0.15)
-    add_tone(t_ausweis, 0.2, 523.25, 783.99, vol=0.13, wave_type="triangle")
+    add_whoosh(t_ausweis - 0.25, 0.35, vol=0.11)
+    add_tone(t_ausweis, 0.2, 523.25, 659.25, vol=0.10, wave_type="triangle")
 
-    add_whoosh(t_vote - 0.2, 0.35, vol=0.15)
+    add_whoosh(t_vote - 0.2, 0.35, vol=0.11)
     for ct, freq in [(t_opt_a, 523.25), (t_opt_b, 659.25), (t_opt_c, 783.99)]:
-        add_tone(ct - 0.08, 0.2, freq * 0.85, freq, vol=0.15, wave_type="triangle")
+        add_tone(ct - 0.08, 0.2, freq * 0.85, freq, vol=0.11, wave_type="triangle")
 
-    add_whoosh(t_mystery - 0.2, 0.4, vol=0.17)
-    add_mystery_boom(t_mystery, 2.2, vol=0.22)
-    add_mystery_boom(t_sektor7 - 0.1, 1.8, vol=0.20)
-    add_whoosh(t_outro - 0.2, 0.36, vol=0.18)
+    add_whoosh(t_mystery - 0.2, 0.4, vol=0.13)
+    add_mystery_boom(t_mystery, 2.2, vol=0.16)
+    add_mystery_boom(t_sektor7 - 0.1, 1.8, vol=0.15)
+    add_whoosh(t_outro - 0.2, 0.36, vol=0.13)
 
     audio = np.clip(audio, -0.95, 0.95)
     sfx_wav = os.path.join(BUILD_DIR, "sfx.wav")
@@ -278,7 +275,7 @@ def main():
         "-i", mp3_path,
         "-i", sfx_wav,
         "-filter_complex",
-        f"[0:a]apad=whole_dur={target_duration}[v];[1:a]volume=0.85[s];[v][s]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[out]",
+        f"[0:a]apad=whole_dur={target_duration}[v];[1:a]volume=0.75[s];[v][s]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[out]",
         "-map", "[out]",
         "-t", f"{target_duration:.2f}",
         "-c:a", "aac", "-b:a", "192k",

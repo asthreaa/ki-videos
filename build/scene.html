@@ -745,26 +745,48 @@ const CleanCenter = { x: -0.3, z: 2.8 };
 const terrainTex = new THREE.CanvasTexture(liveTexCan);
 terrainTex.anisotropy = 4;
 
+// Define the astronaut's sweeping walk path across the forecourt (so he walks around & cleans where his broom passes!)
+function getAstroSweepPose(u) {
+  // u in [0, 1]: expanding spiral sweep in the open forecourt in front of the ramp (never touching ramp or lander!)
+  const angle = u * Math.PI * 5.2;
+  const rx = 0.65 + u * 2.25;
+  const rz = 0.45 + u * 1.45;
+  const x = -0.8 + Math.cos(angle) * rx;
+  const z = 4.1 + Math.sin(angle) * rz;
+  // Derivative for facing direction
+  const dx = -Math.sin(angle) * rx * 5.2 + Math.cos(angle) * 0.5;
+  const dz =  Math.cos(angle) * rz * 5.2 + Math.sin(angle) * 0.35;
+  const yaw = Math.atan2(dx, dz);
+  // Broom head is 1.25 units in front of astronaut along his facing direction
+  const broomX = x + Math.sin(yaw) * 1.25;
+  const broomZ = z + Math.cos(yaw) * 1.25;
+  return { x, z, yaw, broomX, broomZ };
+}
+
 function updateSandyMoonTexture(cleanProg) {
   ltCtx.drawImage(sandBaseCan, 0, 0);
-  if (cleanProg > 0.01) {
-    const cx = ((CleanCenter.x + TERRAIN_SIZE / 2) / TERRAIN_SIZE) * 2048;
-    const cy = ((CleanCenter.z + TERRAIN_SIZE / 2) / TERRAIN_SIZE) * 2048;
-    const maxR = (5.4 / TERRAIN_SIZE) * 2048;
-    const r = maxR * (0.25 + 0.75 * cleanProg);
-
-    const grad = ltCtx.createRadialGradient(cx, cy, r * 0.65, cx, cy, r);
-    grad.addColorStop(0.0, 'rgba(222, 228, 236, 0.88)'); // Clean, bright light-silver Moon sand
-    grad.addColorStop(0.8, 'rgba(210, 217, 226, 0.75)');
-    grad.addColorStop(1.0, 'rgba(210, 217, 226, 0.0)');
-    ltCtx.fillStyle = grad;
-    ltCtx.beginPath();
-    ltCtx.arc(cx, cy, r, 0, Math.PI * 2);
-    ltCtx.fill();
+  if (cleanProg > 0.005) {
+    // Paint the clean silver-grey trail along every point the astronaut's broom has swept up to cleanProg!
+    const steps = Math.max(2, Math.floor(cleanProg * 140));
+    for (let i = 0; i <= steps; i++) {
+      const u = (i / 140);
+      const pose = getAstroSweepPose(u);
+      const cx = ((pose.broomX + TERRAIN_SIZE / 2) / TERRAIN_SIZE) * 2048;
+      const cy = ((pose.broomZ + TERRAIN_SIZE / 2) / TERRAIN_SIZE) * 2048;
+      const r = (1.65 / TERRAIN_SIZE) * 2048;
+      const grad = ltCtx.createRadialGradient(cx, cy, r * 0.45, cx, cy, r);
+      grad.addColorStop(0.0, 'rgba(222, 228, 236, 0.92)');
+      grad.addColorStop(0.75, 'rgba(210, 217, 226, 0.72)');
+      grad.addColorStop(1.0, 'rgba(210, 217, 226, 0.0)');
+      ltCtx.fillStyle = grad;
+      ltCtx.beginPath();
+      ltCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      ltCtx.fill();
+    }
   }
   terrainTex.needsUpdate = true;
 }
-updateSandyMoonTexture(0.15);
+updateSandyMoonTexture(0.02);
 
 // Smoothly shaded 3D Moon Terrain (flatShading: FALSE so there are zero harsh triangle facets!)
 const terrainGeo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE, 160, 160);
@@ -794,19 +816,19 @@ const rockMat = new THREE.MeshStandardMaterial({ color: 0x6b7280, roughness: 0.9
 const dustPileMat = new THREE.MeshStandardMaterial({ color: 0x525866, roughness: 0.96 });
 
 const sweepableDustPiles = [];
-// 8 soft dust piles in front of the airlock that get swept up smoothly
-for (let i = 0; i < 8; i++) {
-  const a = (i / 8) * Math.PI * 2 + 0.3;
-  const rad = 1.6 + (i % 2) * 1.4;
-  const dx = CleanCenter.x + Math.cos(a) * rad;
-  const dz = CleanCenter.z + Math.sin(a) * rad;
+// Place 10 soft dust piles directly along the astronaut's sweeping path so he physically sweeps each one away!
+for (let i = 0; i < 10; i++) {
+  const uSpot = (i + 0.8) / 10.5;
+  const pose = getAstroSweepPose(uSpot);
+  const dx = pose.broomX;
+  const dz = pose.broomZ;
   const dy = getSmoothMoonHeight(dx, dz);
-  const pile = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 10), dustPileMat);
-  pile.scale.set(1.3, 0.38, 1.15);
-  pile.position.set(dx, dy + 0.1, dz);
+  const pile = new THREE.Mesh(new THREE.SphereGeometry(0.40, 12, 10), dustPileMat);
+  pile.scale.set(1.3, 0.36, 1.15);
+  pile.position.set(dx, dy + 0.09, dz);
   pile.castShadow = true;
   scene.add(pile);
-  sweepableDustPiles.push({ mesh: pile, threshold: (i + 1) / 9 });
+  sweepableDustPiles.push({ mesh: pile, threshold: uSpot });
 }
 
 // 28 widely spaced natural moon boulders outside the base ("großflächig verteilt")
@@ -1070,35 +1092,47 @@ const backpack = addOutline(
 backpack.position.set(0, 1.48, -0.48);
 astroGroup.add(backpack);
 
-// Arms + Orange Sweeping Broom
+// Arms + Unified Connected Push-Broom Held Cleanly IN FRONT of the Astronaut (NEVER inside his body!)
 const armRig = new THREE.Group();
 armRig.position.set(0, 1.75, 0);
 astroGroup.add(armRig);
 
 const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.85, 8), makeMat(0xf8fafc));
-leftArm.position.set(-0.66, -0.28, 0.12);
-leftArm.rotation.z = -0.15;
+leftArm.position.set(-0.56, -0.22, 0.38);
+leftArm.rotation.x = -0.65;
+leftArm.rotation.z = 0.22;
 armRig.add(leftArm);
 
 const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.85, 8), makeMat(0xf8fafc));
-rightArm.position.set(0.66, -0.28, 0.22);
-rightArm.rotation.z = 0.22;
+rightArm.position.set(0.56, -0.22, 0.38);
+rightArm.rotation.x = -0.65;
+rightArm.rotation.z = -0.22;
 armRig.add(rightArm);
 
+// Broom built with origin at the Brush Head on the ground (0, -1.22, 1.25) and handle welded directly into the brush head!
 const broomGroup = new THREE.Group();
-const bHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.9, 8), makeMat(0xb45309));
-bHandle.position.set(0.35, -0.45, 0.65);
-bHandle.rotation.x = 0.55;
-bHandle.rotation.z = -0.2;
-broomGroup.add(bHandle);
+broomGroup.position.set(0, -1.22, 1.25);
 
-const bHead = addOutline(new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.16, 0.3), makeMat(0x334155)));
-bHead.position.set(0.18, -1.18, 1.15);
+const bHead = addOutline(new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.16, 0.32), makeMat(0x334155)));
+bHead.position.set(0, 0.08, 0);
 broomGroup.add(bHead);
 
-const bBristles = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.22, 0.26), makeMat(0xf97316, 0.8));
-bBristles.position.set(0.18, -1.34, 1.15);
+const bBristles = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.22, 0.28), makeMat(0xf97316, 0.8));
+bBristles.position.set(0, -0.10, 0);
 broomGroup.add(bBristles);
+
+// Connector socket on top center of the brush head
+const bSocket = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.10, 0.16, 8), makeMat(0x475569));
+bSocket.position.set(0, 0.20, 0);
+broomGroup.add(bSocket);
+
+// Handle starts inside bSocket at (0, 0.16, 0) and angles up & back to the hands at (0, 1.32, -0.58)
+// Midpoint = (0, 0.74, -0.29), length = 1.30, rotation.x = -0.44 rad (tilted toward the hands, 100% attached to bHead!)
+const bHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 1.35, 8), makeMat(0xb45309));
+bHandle.position.set(0, 0.74, -0.29);
+bHandle.rotation.x = -0.44;
+broomGroup.add(bHandle);
+
 armRig.add(broomGroup);
 
 // Astronaut Helmet + Expressive Animated Face Inside Visor!
@@ -1202,8 +1236,8 @@ window.setTime = function(t) {
   const isIntro = t < M.t_overview - 0.15;
   const isOutro = t >= M.t_outro - 0.25;
 
-  // Sweep progress across the video
-  const cleanProg = clamp((t - 4.0) / 22.0, 0.15, 1.0);
+  // Sweep progress across the video (starts at 0 when overview begins, progresses as he walks & sweeps!)
+  const cleanProg = clamp((t - M.t_overview) / 28.0, 0.0, 1.0);
   updateSandyMoonTexture(cleanProg);
   sweepableDustPiles.forEach((sp) => {
     sp.mesh.visible = cleanProg < sp.threshold;
@@ -1218,11 +1252,18 @@ window.setTime = function(t) {
     astroGroup.position.set(ax, getSmoothMoonHeight(ax, az), az);
     astroGroup.rotation.y = 0.08;
     broomGroup.visible = false;
+    leftArm.position.set(-0.66, -0.28, 0.12);
+    leftArm.rotation.set(0, 0, -0.15);
+    rightArm.position.set(0.66, -0.28, 0.12);
+    rightArm.rotation.set(0, 0, 0.15);
+    leftLeg.rotation.x = 0;
+    rightLeg.rotation.x = 0;
 
     // Gentle, natural breathing & head nod
     headGroup.rotation.y = Math.sin(t * 2.0) * 0.05;
     headGroup.rotation.z = Math.cos(t * 1.6) * 0.025;
     armRig.rotation.x = Math.sin(t * 2.4) * 0.04;
+    armRig.position.z = 0;
 
     if (isOutro) {
       eyeGroups.forEach((e) => e.scale.set(1.0, 0.34, 1.0));
@@ -1238,18 +1279,26 @@ window.setTime = function(t) {
     camera.position.set(-0.15, 2.25, 10.6);
     camera.lookAt(0.1, 1.95, 2.0);
   } else {
-    // Overview: Smooth 3D Isometric / Bird's-Eye Camera over the Sandy Moon Base!
+    // Overview: Astronaut physically walks along the sweeping path across the forecourt while pushing the broom!
     broomGroup.visible = true;
+    leftArm.position.set(-0.52, -0.20, 0.36);
+    leftArm.rotation.set(-0.65, 0, 0.25);
+    rightArm.position.set(0.52, -0.20, 0.36);
+    rightArm.rotation.set(-0.65, 0, -0.25);
     eyeGroups.forEach((e) => e.scale.set(1.0, 1.0, 1.0));
     mouthGroup.scale.set(1.0, 0.3, 1.0);
 
-    // Smooth, gentle arc movement of the Astronaut sweeping in front of the airlock (NO jerky twitching!)
-    const sweepAngle = Math.sin(t * 0.65) * 1.1;
-    const ax = CleanCenter.x + Math.sin(sweepAngle) * 2.2;
-    const az = CleanCenter.z + Math.cos(sweepAngle) * 1.2;
-    astroGroup.position.set(ax, getSmoothMoonHeight(ax, az), az);
-    astroGroup.rotation.y = sweepAngle * 0.5;
-    armRig.rotation.x = Math.sin(t * 6.0) * 0.18;
+    const pose = getAstroSweepPose(cleanProg);
+    const isWalking = cleanProg < 0.995;
+    const walkBob = isWalking ? Math.abs(Math.sin(t * 7.5)) * 0.08 : 0;
+    astroGroup.position.set(pose.x, getSmoothMoonHeight(pose.x, pose.z) + walkBob, pose.z);
+    astroGroup.rotation.y = pose.yaw;
+
+    // Alternating walking legs + forward-back broom push motion
+    leftLeg.rotation.x = isWalking ? Math.sin(t * 7.5) * 0.38 : 0;
+    rightLeg.rotation.x = isWalking ? -Math.sin(t * 7.5) * 0.38 : 0;
+    armRig.rotation.x = 0;
+    armRig.position.z = isWalking ? Math.sin(t * 11.0) * 0.14 : 0;
 
     if (t < M.t_mystery - 0.2) {
       // Smooth camera zoom out showing the Lunar Capsule, Lander, cleaned sandy zone, and wide cratered Moon

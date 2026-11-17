@@ -34,7 +34,7 @@ async def render_preview_frames():
             [timeline, words]
         )
 
-        test_times = [1.2, 3.5, 8.5, 17.5, 30.5, 47.0, 56.5, 60.0]
+        test_times = [1.2, 7.0, 11.5, 15.0, 25.0, 36.0, 56.5, 62.5]
         for idx, t in enumerate(test_times):
             await page.evaluate(f"window.setTime({t})")
             out_path = os.path.join(BUILD_DIR, f"preview_{idx}_{t:.1f}s.jpg")
@@ -117,11 +117,11 @@ async def render_full_video(fps=30):
         subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "HEAD:master"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "ki-videos"], cwd=WORKSPACE, check=False)
-        v3_mp4 = os.path.join(WORKSPACE, "Mond_Projekt_Teil_1_v3.mp4")
-        subprocess.run(["cp", out_mp4, v3_mp4], cwd=WORKSPACE, check=False)
-        subprocess.run(["gh", "release", "create", "teil-1-v3", v3_mp4, out_mp4, "--repo", "asthreaa/ki-videos", "--title", "🌕 Das Mond-Projekt – Teil 1 (v3 - ElevenLabs Voice & Perfekter Sync)", "--notes", "Mit natürlicher deutscher ElevenLabs-Stimme, millisekundengenauem Wort-Sync und eigener Follower-Kapsel-Mechanik ab Teil 2.", "--latest"], cwd=WORKSPACE, check=False)
-        subprocess.run(["gh", "release", "upload", "teil-1-v2", out_mp4, "--clobber", "--repo", "asthreaa/ki-videos"], cwd=WORKSPACE, check=False)
-        subprocess.run(["rm", "-f", v3_mp4], cwd=WORKSPACE, check=False)
+        v4_mp4 = os.path.join(WORKSPACE, "Mond_Projekt_Teil_1_v4.mp4")
+        subprocess.run(["cp", out_mp4, v4_mp4], cwd=WORKSPACE, check=False)
+        subprocess.run(["gh", "release", "create", "teil-1-v4", v4_mp4, out_mp4, "--repo", "asthreaa/ki-videos", "--title", "🌕 Das Mond-Projekt – Teil 1 (v4 - Ruhige Stimme & Besen-Fix)", "--notes", "Ruhige, warme ElevenLabs-Stimme (Christian), gefixter Besen vor dem Astronauten und dynamischer Fege-Pfad.", "--latest"], cwd=WORKSPACE, check=False)
+        subprocess.run(["gh", "release", "upload", "teil-1-v3", out_mp4, "--clobber", "--repo", "asthreaa/ki-videos"], cwd=WORKSPACE, check=False)
+        subprocess.run(["rm", "-f", v4_mp4], cwd=WORKSPACE, check=False)
         print("Automatically pushed video to https://github.com/asthreaa/ki-videos")
     except Exception as e:
         print("Git auto-push warning:", e)
