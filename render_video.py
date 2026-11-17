@@ -110,6 +110,16 @@ async def render_full_video(fps=30):
         raise RuntimeError(f"FFmpeg exited with code {ret}")
     print("Successfully rendered:", out_mp4)
 
+    # Automatically commit and push rendered video to GitHub (asthreaa/ki-videos)
+    try:
+        subprocess.run(["git", "add", out_mp4, "generate_audio.py", "render_video.py", "build/scene.html", "build/timeline.json", "build/words.json", "build/audio_mix.aac"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "commit", "-m", "Auto-Upload: Aktualisiertes Video Mond_Projekt_Teil_1.mp4"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "push", "origin", "ki-videos"], cwd=WORKSPACE, check=False)
+        print("Automatically pushed video to https://github.com/asthreaa/ki-videos")
+    except Exception as e:
+        print("Git auto-push warning:", e)
+
 if __name__ == "__main__":
     mode = sys.argv[1] if len(sys.argv) > 1 else "preview"
     if mode == "preview":
