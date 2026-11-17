@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+build/preview_*.jpg
+build/sfx.wav
+build/voice_raw.mp3

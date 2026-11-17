@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<title>Das Mond-Projekt – Tag 1 (Viral Edition)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #1e1b4b;
+    font-family: 'DejaVu Sans', 'Segoe UI', 'Ubuntu', system-ui, -apple-system, sans-serif;
+  }
+  #stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+  }
+  #webgl-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1080px;
+    height: 1920px;
+    z-index: 1;
+  }
+
+  /* 1. TOP HEADER BAR (Exact @das.letzte.camp Style!) */
+  #top-header {
+    position: absolute;
+    top: 215px;
+    left: 40px;
+    right: 40px;
+    height: 136px;
+    background: linear-gradient(135deg, #232d6b 0%, #171f4d 100%);
+    border-radius: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 24px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.38);
+    z-index: 8;
+    opacity: 0;
+  }
+  .hdr-logo {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .hdr-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hdr-title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .hdr-badges {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge-red {
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 900;
+    padding: 5px 18px;
+    border-radius: 18px;
+    text-transform: uppercase;
+  }
+  .badge-blue {
+    background: rgba(255, 255, 255, 0.14);
+    color: #e2e8f0;
+    font-size: 23px;
+    font-weight: 800;
+    padding: 5px 20px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 2. INTRO GIANT "TAG 1" OVERLAY */
+  #intro-tag {
+    position: absolute;
+    top: 115px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 165px;
+    font-weight: 900;
+    color: #ffffff;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 20px #171f4d;
+    text-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    z-index: 7;
+    opacity: 0;
+  }
+
+  /* 3. CENTER DYNAMIC POP-UP CARDS */
+  #center-cards {
+    position: absolute;
+    top: 390px;
+    left: 40px;
+    right: 40px;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  /* Card A: 12-Stufen Grid (like camp_frame_05.jpg) */
+  .white-card {
+    background: #ffffff;
+    border-radius: 38px;
+    padding: 34px 30px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+  }
+  .card-heading {
+    font-size: 36px;
+    font-weight: 900;
+    color: #171f4d;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.22;
+    margin-bottom: 24px;
+  }
+  .stages-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px 14px;
+  }
+  .stage-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .stage-box {
+    position: relative;
+    width: 195px;
+    height: 175px;
+    border-radius: 26px;
+    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    box-shadow: inset 0 -8px 0 rgba(0,0,0,0.15);
+  }
+  .stage-box.highlight {
+    border: 6px solid #facc15;
+    box-shadow: 0 0 28px rgba(250, 204, 21, 0.85);
+  }
+  .stage-num {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0ea5e9;
+    border: 3px solid #ffffff;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage-num.gold {
+    background: #eab308;
+  }
+  .stage-label {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1e293b;
+    text-align: center;
+  }
+
+  /* Card B: Live Upgrade & Dust Cash Counter (like camp_frame_06/07.jpg) */
+  .upgrade-row {
+    display: flex;
+    gap: 26px;
+    align-items: stretch;
+  }
+  .upgrade-preview {
+    width: 410px;
+    height: 410px;
+    border-radius: 32px;
+    background: linear-gradient(180deg, #38bdf8 0%, #0369a1 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 -10px 0 rgba(0,0,0,0.18);
+  }
+  .preview-tag {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    background: #171f4d;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 900;
+    padding: 8px 20px;
+    border-radius: 16px;
+  }
+  .upgrade-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .feed-pill {
+    background: #f1f5f9;
+    border-radius: 20px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e293b;
+  }
+  .feed-plus {
+    color: #16a34a;
+    font-weight: 900;
+  }
+  .counter-block {
+    text-align: center;
+    margin-top: auto;
+    padding-bottom: 10px;
+  }
+  .counter-lbl {
+    font-size: 26px;
+    font-weight: 900;
+    color: #64748b;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .counter-val {
+    font-size: 92px;
+    font-weight: 900;
+    color: #22c55e;
+    line-height: 1.05;
+  }
+
+  /* Card C: Mond-Bewohnerausweis (like camp_frame_09.jpg) */
+  .ausweis-card {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 4px solid #ffffff;
+    border-radius: 34px;
+    padding: 32px 36px;
+    width: 100%;
+    box-shadow: 0 18px 42px rgba(0,0,0,0.35);
+  }
+  .ausweis-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 22px;
+  }
+  .ausweis-body {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: rgba(255,255,255,0.65);
+    border-radius: 24px;
+    padding: 20px 26px;
+    margin-bottom: 20px;
+  }
+  .ausweis-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #fde047;
+    border: 4px solid #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 54px;
+  }
+  .ausweis-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ausweis-user {
+    font-size: 38px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+  .ausweis-sub {
+    font-size: 26px;
+    font-weight: 700;
+    color: #334155;
+  }
+  .ausweis-role {
+    font-size: 26px;
+    font-weight: 800;
+    color: #16a34a;
+  }
+
+  /* Card D: Vertical A / B / C Vote Stack (like camp_frame_12.jpg) */
+  .vote-pill-hdr {
+    background: #171f4d;
+    color: #ffffff;
+    font-size: 29px;
+    font-weight: 900;
+    padding: 14px 36px;
+    border-radius: 30px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    text-transform: uppercase;
+  }
+  .vote-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+  }
+  .vote-row-card {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+  }
+  .vote-circle {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .vote-thumb {
+    width: 155px;
+    height: 155px;
+    border-radius: 24px;
+    background: #e0f2fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 82px;
+    flex-shrink: 0;
+  }
+  .vote-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vote-row-title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+  .vote-row-desc {
+    font-size: 26px;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  /* Card E: Chronik & Sektor 7 Secret Keycard (like camp_frame_16/18/20.jpg) */
+  .chronik-box {
+    background: rgba(30, 27, 46, 0.95);
+    border: 3px solid rgba(250, 204, 21, 0.45);
+    border-radius: 28px;
+    padding: 26px 34px;
+    width: 100%;
+    color: #ffffff;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+    margin-bottom: 26px;
+  }
+  .chronik-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .chronik-title {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .chronik-badge {
+    border: 2.5px solid #facc15;
+    color: #facc15;
+    padding: 4px 18px;
+    border-radius: 16px;
+    font-size: 22px;
+    font-weight: 900;
+  }
+  .chronik-sub {
+    font-size: 30px;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .keycard-secret {
+    width: 96%;
+    background: #ecebe4;
+    border-radius: 30px;
+    overflow: hidden;
+    transform: rotate(-2.5deg);
+    box-shadow: 0 24px 55px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .keycard-hdr {
+    background: #115e59;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  .keycard-body {
+    padding: 30px 32px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .keycard-photo {
+    width: 150px;
+    height: 180px;
+    border-radius: 18px;
+    background: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 92px;
+    font-weight: 900;
+    color: #64748b;
+  }
+  .keycard-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .kc-lbl {
+    font-size: 20px;
+    font-weight: 900;
+    color: #475569;
+    letter-spacing: 1.5px;
+  }
+  .kc-redact {
+    height: 36px;
+    background: #1e293b;
+    border-radius: 6px;
+  }
+  .kc-barcode {
+    margin-top: 8px;
+    height: 54px;
+    width: 240px;
+    background: repeating-linear-gradient(90deg, #0f172a 0px, #0f172a 5px, transparent 5px, transparent 10px, #0f172a 10px, #0f172a 13px, transparent 13px, transparent 17px);
+  }
+  .kc-stamp {
+    position: absolute;
+    right: 28px;
+    bottom: 26px;
+    border: 5px solid #dc2626;
+    border-radius: 14px;
+    padding: 10px 22px;
+    color: #dc2626;
+    font-size: 26px;
+    font-weight: 900;
+    text-align: center;
+    transform: rotate(-12deg);
+    background: rgba(255,255,255,0.88);
+  }
+
+  /* 4. IMPACT CAPTIONS & COLORED PILL BANNER (Lower Third, exact @das.letzte.camp style!) */
+  #bottom-zone {
+    position: absolute;
+    bottom: 240px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  #impact-word {
+    font-size: 92px;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.08;
+    color: #ffffff;
+    paint-order: stroke fill;
+    -webkit-text-stroke: 18px #171f4d;
+    text-shadow: 0 10px 26px rgba(0,0,0,0.55);
+  }
+  #pill-sub {
+    padding: 16px 38px;
+    border-radius: 40px;
+    font-size: 30px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="webgl-canvas" width="1080" height="1920"></canvas>
+
+  <!-- Top Header Bar -->
+  <div id="top-header">
+    <div class="hdr-logo">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <polygon points="32,4 56,14 52,44 32,60 12,44 8,14" fill="#38bdf8" stroke="#0f172a" stroke-width="4"/>
+        <circle cx="32" cy="30" r="12" fill="#fde047" stroke="#0f172a" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="hdr-col">
+      <div class="hdr-title">DAS MOND-PROJEKT</div>
+      <div class="hdr-badges">
+        <div class="badge-red">TAG 1</div>
+        <div id="hdr-counter" class="badge-blue">🧑‍🚀 1 Astronaut · 0,5% sauber</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Giant Intro "TAG 1" -->
+  <div id="intro-tag">TAG 1</div>
+
+  <!-- Center Dynamic Cards -->
+  <div id="center-cards"></div>
+
+  <!-- Bottom Impact Word + Pill Banner -->
+  <div id="bottom-zone">
+    <div id="impact-word"></div>
+    <div id="pill-sub" style="display:none"></div>
+  </div>
+</div>
+
+<script src="./three.min.js"></script>
+<script>
+window.TIMELINE = null;
+window.WORDS = [];
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function lerp(a, b, t) { return a + (b - a) * clamp(t, 0, 1); }
+function easeOutBack(x) {
+  const c1 = 1.70158, c3 = c1 + 1;
+  return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+}
+
+// ---------- THREE.JS SCENE WITH TWO VIEWS (Close-Up Talking Head + Concentric Top-Down Overview) ----------
+const canvas = document.getElementById('webgl-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(1080, 1920, false);
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+
+// Smooth sky gradient texture for Close-Up View (matching @das.letzte.camp twilight purple-blue sky!)
+const skyCan = document.createElement('canvas');
+skyCan.width = 512; skyCan.height = 1024;
+const sCtx = skyCan.getContext('2d');
+const sGrad = sCtx.createLinearGradient(0, 0, 0, 1024);
+sGrad.addColorStop(0.0, '#2e235c');
+sGrad.addColorStop(0.32, '#4c3875');
+sGrad.addColorStop(0.55, '#94a3b8');
+sGrad.addColorStop(1.0, '#cbd5e1');
+sCtx.fillStyle = sGrad;
+sCtx.fillRect(0, 0, 512, 1024);
+scene.background = new THREE.CanvasTexture(skyCan);
+
+const camera = new THREE.PerspectiveCamera(42, 1080 / 1920, 0.5, 300);
+
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x475569, 0.78);
+scene.add(hemiLight);
+
+const dirLight = new THREE.DirectionalLight(0xfffbeb, 0.85);
+dirLight.position.set(18, 45, 25);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+scene.add(dirLight);
+
+function flatMat(color, roughness = 0.75) {
+  return new THREE.MeshStandardMaterial({ color, roughness, metalness: 0.08, flatShading: true });
+}
+
+// ---------- 1. CLEAN, HARMONIOUS CONCENTRIC MOON WORLD (Matching camp_frame_03.jpg!) ----------
+const worldGroup = new THREE.Group();
+scene.add(worldGroup);
+
+// Procedural Concentric Lunar Surface Canvas Texture (Ultra-clean, smooth, bright silver-blue palette!)
+const mapCan = document.createElement('canvas');
+mapCan.width = 2048;
+mapCan.height = 2048;
+const mCtx = mapCan.getContext('2d');
+
+function drawConcentricMoonMap(cleanRadNorm = 1.0) {
+  const cx = 1024, cy = 1024;
+  // Outer Uncleaned Moon Surface (Harmonious Cool Lunar Slate-Grey, 100% readable!)
+  mCtx.fillStyle = '#64748b';
+  mCtx.fillRect(0, 0, 2048, 2048);
+
+  // Subtle lunar craters on the outer dusty surface
+  const crCoords = [
+    [320, 380, 75], [1720, 360, 85], [260, 1650, 90], [1740, 1620, 80],
+    [210, 980, 65], [1820, 1040, 70], [640, 220, 60], [1420, 1820, 72]
+  ];
+  crCoords.forEach(([x, y, r]) => {
+    mCtx.fillStyle = '#475569';
+    mCtx.beginPath();
+    mCtx.arc(x, y, r, 0, Math.PI * 2);
+    mCtx.fill();
+    mCtx.strokeStyle = '#78879c';
+    mCtx.lineWidth = 8;
+    mCtx.stroke();
+  });
+
+  // Concentric sector rings across the whole Moon (like @das.letzte.camp!)
+  for (let r = 960; r > 120; r -= 32) {
+    mCtx.strokeStyle = r > 585
+      ? (r % 64 === 0 ? 'rgba(51, 65, 85, 0.45)' : 'rgba(148, 163, 184, 0.28)')
+      : (r % 64 === 0 ? 'rgba(100, 116, 139, 0.35)' : 'rgba(241, 245, 249, 0.45)');
+    mCtx.lineWidth = 10;
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.stroke();
+  }
+
+  // Middle Ring Zone (Semi-cleaned Lunar Ring)
+  mCtx.fillStyle = '#94a3b8';
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 585, 0, Math.PI * 2);
+  mCtx.fill();
+
+  // Re-draw concentric lines inside middle ring
+  for (let r = 560; r > 315; r -= 28) {
+    mCtx.strokeStyle = 'rgba(226, 232, 240, 0.42)';
+    mCtx.lineWidth = 8;
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.stroke();
+  }
+
+  // Inner Cleaned Core Zone (Bright Silver-Blue Lunar Stone!)
+  mCtx.fillStyle = '#cbd5e1';
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 315 * cleanRadNorm, 0, Math.PI * 2);
+  mCtx.fill();
+
+  for (let r = 290; r > 115; r -= 26) {
+    mCtx.strokeStyle = 'rgba(248, 250, 252, 0.55)';
+    mCtx.lineWidth = 7;
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.stroke();
+  }
+
+  // 4 Radial Cross-Walkways (North, South, East, West — exact @das.letzte.camp geometry!)
+  mCtx.fillStyle = '#e2e8f0';
+  mCtx.fillRect(cx - 24, 0, 48, 2048);
+  mCtx.fillRect(0, cy - 24, 2048, 48);
+
+  // Center Base Plaza Circle
+  mCtx.fillStyle = '#e2e8f0';
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 115, 0, Math.PI * 2);
+  mCtx.fill();
+
+  // Inner Circular Titanium Perimeter Wall Ring (like the wooden palisade in camp_frame_03.jpg!)
+  mCtx.strokeStyle = '#1e293b';
+  mCtx.lineWidth = 16;
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 315, 0, Math.PI * 2);
+  mCtx.stroke();
+
+  // Outer Dust Perimeter Ring Line
+  mCtx.strokeStyle = '#334155';
+  mCtx.lineWidth = 12;
+  mCtx.beginPath();
+  mCtx.arc(cx, cy, 585, 0, Math.PI * 2);
+  mCtx.stroke();
+}
+drawConcentricMoonMap(1.0);
+
+const groundTex = new THREE.CanvasTexture(mapCan);
+const groundMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(180, 180),
+  new THREE.MeshBasicMaterial({ map: groundTex })
+);
+groundMesh.rotation.x = -Math.PI / 2;
+worldGroup.add(groundMesh);
+
+// Distant Lunar Horizon Cliffs (seen behind the Astronaut in Close-Up View, matching camp_frame_01.jpg!)
+for (let i = -8; i <= 8; i++) {
+  if (Math.abs(i) <= 1) continue; // Keep center path open
+  const w = 4.2 + (Math.abs(i * 7) % 3);
+  const h = 5.5 + (Math.abs(i * 13) % 5);
+  const cliff = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, 3.5),
+    flatMat(0x64748b, 0.9)
+  );
+  cliff.position.set(i * 3.4, h / 2 - 0.2, -32 - (Math.abs(i) % 3) * 2);
+  worldGroup.add(cliff);
+}
+
+// Concentric Colorful 3D Lunar Pods / Tents (1 Follow = 1 Mond-Kapsel, matching camp_frame_03.jpg!)
+const podColors = [0x38bdf8, 0xf97316, 0xa855f7, 0x22c55e, 0xef4444, 0xfacc15, 0x3b82f6];
+const podGeo = new THREE.ConeGeometry(0.42, 0.68, 4);
+
+function spawnPodRing(radius, count) {
+  for (let i = 0; i < count; i++) {
+    const ang = (i / count) * Math.PI * 2;
+    const px = Math.cos(ang) * radius;
+    const pz = Math.sin(ang) * radius;
+    // Leave the 4 radial cross-walkways clear!
+    if (Math.abs(px) < 1.8 || Math.abs(pz) < 1.8) continue;
+    const pod = new THREE.Mesh(
+      podGeo,
+      flatMat(podColors[(i + Math.round(radius)) % podColors.length], 0.6)
+    );
+    pod.position.set(px, 0.34, pz);
+    pod.rotation.y = Math.PI / 4 + ang;
+    worldGroup.add(pod);
+  }
+}
+// Inner rings & middle rings of Follower Lunar Pods
+[5.2, 6.6, 8.0, 9.4, 10.8, 12.2, 17.5, 19.0, 20.5, 22.0, 23.5].forEach((r, idx) => {
+  spawnPodRing(r, Math.floor(r * 4.2));
+});
+
+// Outer Ring of Moon Dust Mounds / Soft Craters (to be swept away!)
+for (let i = 0; i < 24; i++) {
+  const ang = (i / 24) * Math.PI * 2 + 0.13;
+  const dx = Math.cos(ang) * 26.2;
+  const dz = Math.sin(ang) * 26.2;
+  if (Math.abs(dx) < 2.0 || Math.abs(dz) < 2.0) continue;
+  const dustCluster = new THREE.Mesh(
+    new THREE.DodecahedronGeometry(0.75, 0),
+    flatMat(0x475569, 0.9)
+  );
+  dustCluster.scale.set(1.3, 0.55, 1.1);
+  dustCluster.position.set(dx, 0.3, dz);
+  worldGroup.add(dustCluster);
+}
+
+// Center Moon Base Buildings (Inside the center plaza)
+const centerBase = new THREE.Group();
+worldGroup.add(centerBase);
+
+// Main Lunar Habitat Dome in Center-Right
+const habDome = new THREE.Mesh(
+  new THREE.CylinderGeometry(1.1, 1.35, 1.2, 8),
+  flatMat(0xf8fafc, 0.4)
+);
+habDome.position.set(1.5, 0.6, -1.2);
+centerBase.add(habDome);
+
+const habRoof = new THREE.Mesh(
+  new THREE.ConeGeometry(1.2, 0.7, 8),
+  flatMat(0x0284c7, 0.4)
+);
+habRoof.position.set(1.5, 1.55, -1.2);
+centerBase.add(habRoof);
+
+// Staub-Verkaufs-Terminal on Center-Left
+const dustTerm = new THREE.Mesh(
+  new THREE.BoxGeometry(0.9, 1.1, 0.9),
+  flatMat(0xfacc15, 0.5)
+);
+dustTerm.position.set(-1.5, 0.55, -1.2);
+centerBase.add(dustTerm);
+
+// Sektor 7 Mysterious Abandoned Lunar Lab Grid in the North (z = -52, revealed during Mystery Scene!)
+const sektor7Group = new THREE.Group();
+sektor7Group.position.set(0, 0, -55);
+worldGroup.add(sektor7Group);
+
+const labGround = new THREE.Mesh(
+  new THREE.PlaneGeometry(80, 55),
+  new THREE.MeshBasicMaterial({ color: 0x334155 })
+);
+labGround.rotation.x = -Math.PI / 2;
+labGround.position.y = 0.08;
+sektor7Group.add(labGround);
+
+for (let gx = -3; gx <= 3; gx++) {
+  for (let gz = -2; gz <= 2; gz++) {
+    const ruin = new THREE.Mesh(
+      new THREE.BoxGeometry(4.2, 1.6, 3.8),
+      flatMat((gx + gz) % 2 === 0 ? 0x64748b : 0x78716c, 0.85)
+    );
+    ruin.position.set(gx * 5.6, 0.8, gz * 5.2);
+    sektor7Group.add(ruin);
+
+    // Glowing orange hazard beacon / fire on ruins (like camp_frame_18.jpg!)
+    const beacon = new THREE.Mesh(
+      new THREE.ConeGeometry(0.55, 1.4, 5),
+      new THREE.MeshBasicMaterial({ color: 0xf97316 })
+    );
+    beacon.position.set(gx * 5.6, 2.1, gz * 5.2);
+    sektor7Group.add(beacon);
+  }
+}
+
+// ---------- 2. CLOSE-UP LOW-POLY 3D ASTRONAUT COMMANDER & PLASMA CAMPFIRE (Matching camp_frame_01.jpg & 24.jpg!) ----------
+const closeupGroup = new THREE.Group();
+closeupGroup.position.set(0, 0, 6.0);
+scene.add(closeupGroup);
+
+// Low-Poly Plasma Campfire / Energy Core behind the Astronaut on the right (exact match to camp_frame_01.jpg!)
+const fireGroup = new THREE.Group();
+fireGroup.position.set(1.15, 0, 1.1);
+closeupGroup.add(fireGroup);
+
+// Ring of faceted grey moon stones around the fire
+for (let i = 0; i < 8; i++) {
+  const a = (i / 8) * Math.PI * 2;
+  const stone = new THREE.Mesh(
+    new THREE.DodecahedronGeometry(0.32, 0),
+    flatMat(0x94a3b8, 0.85)
+  );
+  stone.scale.set(1.2, 0.75, 1.0);
+  stone.position.set(Math.cos(a) * 0.82, 0.18, Math.sin(a) * 0.82);
+  fireGroup.add(stone);
+}
+const flameMain = new THREE.Mesh(
+  new THREE.ConeGeometry(0.52, 1.75, 4),
+  new THREE.MeshBasicMaterial({ color: 0xf97316 })
+);
+flameMain.position.set(0, 0.9, 0);
+fireGroup.add(flameMain);
+
+const flameLeft = new THREE.Mesh(
+  new THREE.ConeGeometry(0.32, 1.1, 4),
+  new THREE.MeshBasicMaterial({ color: 0xfacc15 })
+);
+flameLeft.position.set(-0.38, 0.6, 0.12);
+fireGroup.add(flameLeft);
+
+const flameRight = new THREE.Mesh(
+  new THREE.ConeGeometry(0.32, 1.15, 4),
+  new THREE.MeshBasicMaterial({ color: 0xfacc15 })
+);
+flameRight.position.set(0.38, 0.62, 0.12);
+fireGroup.add(flameRight);
+
+// THE CLOSE-UP 3D CHARACTER (Expressive Low-Poly Astronaut Commander with Animated Mouth & Eyes!)
+const charGroup = new THREE.Group();
+charGroup.position.set(-0.55, 0, 2.2);
+charGroup.scale.set(0.84, 0.84, 0.84);
+closeupGroup.add(charGroup);
+
+// Boots & Legs
+[-0.28, 0.28].forEach((lx) => {
+  const boot = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.52), flatMat(0x1e293b));
+  boot.position.set(lx, 0.14, 0.05);
+  charGroup.add(boot);
+
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.95, 8), flatMat(0x1e293b));
+  leg.position.set(lx, 0.72, 0);
+  charGroup.add(leg);
+});
+
+// Space Jacket / Suit Torso (Clean Astronaut White + Orange Collar + Cyan Chest Strip)
+const torsoMesh = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.62, 0.66, 1.38, 10),
+  flatMat(0xf8fafc, 0.55)
+);
+torsoMesh.position.y = 1.82;
+torsoMesh.castShadow = true;
+charGroup.add(torsoMesh);
+
+const suitZipper = new THREE.Mesh(
+  new THREE.BoxGeometry(0.08, 1.32, 0.08),
+  flatMat(0x0284c7)
+);
+suitZipper.position.set(0, 1.82, 0.62);
+charGroup.add(suitZipper);
+
+// Orange Astronaut Neck Ring (matching Moon Sweepers & camp_frame_01 red scarf!)
+const neckRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.52, 0.15, 8, 14),
+  flatMat(0xea580c, 0.5)
+);
+neckRing.rotation.x = Math.PI / 2;
+neckRing.position.y = 2.52;
+charGroup.add(neckRing);
+
+// Arms
+const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.18, 1.15, 8), flatMat(0xf8fafc));
+leftArm.position.set(-0.76, 1.82, 0);
+leftArm.rotation.z = -0.14;
+charGroup.add(leftArm);
+
+const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.18, 1.15, 8), flatMat(0xf8fafc));
+rightArm.position.set(0.76, 1.82, 0.12);
+rightArm.rotation.z = 0.26;
+charGroup.add(rightArm);
+
+// Head Group (Low-Poly Faceted Head + Expressive Eyes + Lip-Sync Mouth + Clear Helmet Rim!)
+const headGroup = new THREE.Group();
+headGroup.position.set(0, 3.42, 0);
+charGroup.add(headGroup);
+
+const headSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.88, 14, 10),
+  flatMat(0xd6a87c, 0.75)
+);
+headGroup.add(headSphere);
+
+// Low-Poly Hair Cap with spiky tufts (like camp_frame_01.jpg!)
+const hairCap = new THREE.Mesh(
+  new THREE.SphereGeometry(0.91, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.46),
+  flatMat(0x291d12, 0.85)
+);
+hairCap.position.y = 0.06;
+headGroup.add(hairCap);
+
+for (let i = -2; i <= 2; i++) {
+  const tuft = new THREE.Mesh(
+    new THREE.BoxGeometry(0.28, 0.28, 0.32),
+    flatMat(0x291d12, 0.85)
+  );
+  tuft.position.set(i * 0.28, 0.78, 0.35);
+  tuft.rotation.set(0.3, i * 0.2, i * 0.15);
+  headGroup.add(tuft);
+}
+
+// Ears
+[-0.86, 0.86].forEach((ex) => {
+  const ear = new THREE.Mesh(
+    new THREE.SphereGeometry(0.18, 8, 6),
+    flatMat(0xc49368, 0.75)
+  );
+  ear.position.set(ex, 0.02, 0.05);
+  headGroup.add(ear);
+});
+
+// Nose
+const noseMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(0.16, 8, 6),
+  flatMat(0xc49368, 0.75)
+);
+noseMesh.position.set(0, -0.02, 0.88);
+headGroup.add(noseMesh);
+
+// Expressive Eyes (White Sclera + Dark Pupils + Upper/Lower Eyelids for Squinting/Blinking!)
+const eyeWhites = [];
+[-0.31, 0.31].forEach((ex) => {
+  const eGrp = new THREE.Group();
+  eGrp.position.set(ex, 0.12, 0.78);
+  const white = new THREE.Mesh(
+    new THREE.SphereGeometry(0.19, 14, 12),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+  );
+  white.scale.z = 0.45;
+  eGrp.add(white);
+
+  const pupil = new THREE.Mesh(
+    new THREE.SphereGeometry(0.10, 12, 10),
+    new THREE.MeshBasicMaterial({ color: 0x0f172a })
+  );
+  pupil.position.set(0, 0, 0.07);
+  pupil.scale.z = 0.45;
+  eGrp.add(pupil);
+
+  const glint = new THREE.Mesh(
+    new THREE.SphereGeometry(0.032, 8, 8),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+  );
+  glint.position.set(-0.035, 0.035, 0.11);
+  eGrp.add(glint);
+
+  headGroup.add(eGrp);
+  eyeWhites.push(eGrp);
+});
+
+// Animated Lip-Sync Mouth with White Upper Teeth (exact match to camp_frame_01.jpg!)
+const mouthGroup = new THREE.Group();
+mouthGroup.position.set(0, -0.34, 0.82);
+headGroup.add(mouthGroup);
+
+const mouthCavity = new THREE.Mesh(
+  new THREE.SphereGeometry(0.20, 12, 10),
+  new THREE.MeshBasicMaterial({ color: 0x3b0a0a })
+);
+mouthCavity.scale.set(0.85, 1.1, 0.35);
+mouthGroup.add(mouthCavity);
+
+const teethBar = new THREE.Mesh(
+  new THREE.BoxGeometry(0.24, 0.065, 0.08),
+  new THREE.MeshBasicMaterial({ color: 0xffffff })
+);
+teethBar.position.set(0, 0.09, 0.04);
+mouthGroup.add(teethBar);
+
+// 12-Stages Data for Card 1
+const STAGES_DATA = [
+  { n: 1, icon: '🪥', name: 'Zahnbürste', hi: true },
+  { n: 2, icon: '🧹', name: 'Mond-Besen' },
+  { n: 3, icon: '⛺', name: 'Starter-Zelt' },
+  { n: 4, icon: '🛸', name: 'Druck-Kapsel' },
+  { n: 5, icon: '🏧', name: 'Staub-Terminal' },
+  { n: 6, icon: '⚡', name: 'Solar-Kuppel' },
+  { n: 7, icon: '🏠', name: 'Astro-Haus' },
+  { n: 8, icon: '🔬', name: 'Mond-Labor' },
+  { n: 9, icon: '🚀', name: 'Raumhafen' },
+  { n: 10, icon: '🏙️', name: 'Glas-Tower' },
+  { n: 11, icon: '🪐', name: 'Orbital-Ring' },
+  { n: 12, icon: '👑', name: 'Mond-Krone', hi: true, gold: true }
+];
+
+// ---------- FRAME UPDATE ----------
+window.setTime = function(t) {
+  if (!window.TIMELINE) return;
+  const M = window.TIMELINE.markers;
+
+  const isIntro = t < M.t_overview - 0.15;
+  const isOutro = t >= M.t_outro - 0.25;
+
+  // 1. CAMERA & CHARACTER ANIMATION
+  if (isIntro || isOutro) {
+    closeupGroup.visible = true;
+    // Full-body / Waist-up framing matching camp_frame_01 & 24 (TAG 1 cleanly above head, campfire on right!)
+    camera.position.set(-0.08, 2.55, 14.8);
+    camera.lookAt(-0.08, 2.25, 6.0);
+
+    // Gentle breathing & head nod (smooth, natural motion — zero jerky twitching!)
+    headGroup.rotation.y = Math.sin(t * 2.2) * 0.06;
+    headGroup.rotation.z = Math.cos(t * 1.8) * 0.03;
+    charGroup.position.y = Math.sin(t * 3.0) * 0.03;
+
+    // Flickering campfire behind him
+    flameMain.scale.y = 0.92 + Math.sin(t * 18) * 0.12;
+    flameLeft.scale.y = 0.88 + Math.cos(t * 22) * 0.15;
+    flameRight.scale.y = 0.90 + Math.sin(t * 20 + 1) * 0.14;
+
+    // Eye blink or Outro dramatic squint (like camp_frame_24.jpg!)
+    if (isOutro) {
+      eyeWhites.forEach((e) => e.scale.set(1.0, 0.34, 1.0));
+      mouthGroup.scale.set(1.1, 0.55, 1.0);
+    } else {
+      const blink = (t % 3.2 > 3.05) ? 0.15 : 1.0;
+      eyeWhites.forEach((e) => e.scale.set(1.0, blink, 1.0));
+      // Lip-sync mouth opening based on active speech word!
+      const speaking = window.WORDS.some((w) => t >= w.start && t <= w.end);
+      const openAmt = speaking ? (0.55 + 0.65 * Math.abs(Math.sin(t * 26))) : 0.22;
+      mouthGroup.scale.set(1.0, openAmt, 1.0);
+    }
+  } else {
+    closeupGroup.visible = false;
+    // Top-Down / Steep Bird's-Eye Overview of the Concentric Moon Base!
+    if (t < M.t_mystery - 0.2) {
+      // Smooth zoom from inner ring out to full concentric camp view
+      const p = clamp((t - M.t_overview) / 2.2, 0, 1);
+      const easeP = 1 - Math.pow(1 - p, 3);
+      const camY = lerp(24.0, 68.0, easeP) + Math.sin(t * 0.4) * 2.0;
+      const camZ = lerp(8.0, 6.0, easeP);
+      camera.position.set(0, camY, camZ);
+      camera.lookAt(0, 0, 0);
+    } else {
+      // Pan North to the Mysterious Sektor 7 Ruins (like camp_frame_18.jpg!)
+      const p = clamp((t - (M.t_mystery - 0.2)) / 1.8, 0, 1);
+      const zLook = lerp(0, -48, p);
+      const yPos = lerp(68.0, 46.0, p);
+      camera.position.set(0, yPos, zLook + 4.0);
+      camera.lookAt(0, 0, zLook);
+    }
+  }
+
+  renderer.render(scene, camera);
+
+  // ---------- 2. TOP HEADER & INTRO TAG ----------
+  const introTag = document.getElementById('intro-tag');
+  const topHeader = document.getElementById('top-header');
+  const hdrCounter = document.getElementById('hdr-counter');
+
+  if (t < 1.8) {
+    introTag.style.opacity = '1';
+    topHeader.style.opacity = '0';
+  } else {
+    introTag.style.opacity = '0';
+    topHeader.style.opacity = '1';
+    const fakeAstros = t < M.t_overview ? 1 : Math.min(14, 1 + Math.floor((t - M.t_overview) * 0.35));
+    hdrCounter.textContent = `🧑‍🚀 ${fakeAstros} Astronauten · 0,5% sauber`;
+  }
+
+  // ---------- 3. CENTER DYNAMIC POP-UP CARDS ----------
+  const cardsEl = document.getElementById('center-cards');
+
+  if (t >= M.t_stages - 0.3 && t < M.t_terminal - 0.4) {
+    // Card 1: 12-Stufen Upgrade Grid (tiles pop in one by one!)
+    const elapsed = t - (M.t_stages - 0.1);
+    const visibleCount = clamp(Math.floor(elapsed / 0.28) + 1, 1, 12);
+    const tilesHtml = STAGES_DATA.map((st, idx) => {
+      const show = idx < visibleCount;
+      const op = show ? '1' : '0';
+      const sc = show ? 'scale(1)' : 'scale(0.5)';
+      return `
+        <div class="stage-item" style="opacity:${op}; transform:${sc}">
+          <div class="stage-box ${st.hi ? 'highlight' : ''}">
+            <div class="stage-num ${st.gold ? 'gold' : ''}">${st.n}</div>
+            <span>${st.icon}</span>
+          </div>
+          <div class="stage-label">${st.name}</div>
+        </div>
+      `;
+    }).join('');
+
+    cardsEl.innerHTML = `
+      <div class="white-card">
+        <div class="card-heading">🚀 12 STUFEN · VOM SCHRUBBER<br/>BIS ZUR MOND-KRONE</div>
+        <div class="stages-grid">${tilesHtml}</div>
+      </div>
+    `;
+  } else if (t >= M.t_terminal - 0.2 && t < M.t_ausweis - 0.4) {
+    // Card 2: Dust Selling & Comment Upgrade Counter (like camp_frame_06/07.jpg)
+    const dt = t - M.t_terminal;
+    const item1 = dt > 0.8;
+    const item2 = dt > 2.2;
+    const item3 = t >= M.t_punkt - 0.5;
+    const cashVal = t < M.t_budget - 0.5
+      ? 0
+      : Math.round(lerp(0, 500, clamp((t - (M.t_budget - 0.5)) / 1.2, 0, 1)));
+
+    cardsEl.innerHTML = `
+      <div class="white-card">
+        <div class="card-heading">📱 AB JETZT HIER IN DEN VIDEOS</div>
+        <div class="upgrade-row">
+          <div class="upgrade-preview">
+            <div style="font-size:150px">🛸</div>
+            <div class="preview-tag">Stufe 1 · Starter-Kapsel</div>
+          </div>
+          <div class="upgrade-right">
+            <div class="feed-list">
+              ${item1 ? `<div class="feed-pill"><span>🧹 Sektor 1 gefegt</span><span class="feed-plus">+250 €</span></div>` : ''}
+              ${item2 ? `<div class="feed-pill"><span>🏧 Mondstaub verkauft</span><span class="feed-plus">+250 €</span></div>` : ''}
+              ${item3 ? `<div class="feed-pill"><span>💬 Kommentar</span><span class="feed-plus">+1 Punkt</span></div>` : ''}
+            </div>
+            <div class="counter-block">
+              <div class="counter-lbl">MONDKASSE</div>
+              <div class="counter-val">${cashVal} €</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (t >= M.t_ausweis - 0.2 && t < M.t_vote - 0.4) {
+    // Card 3: Mond-Bewohnerausweis (like camp_frame_09.jpg)
+    cardsEl.innerHTML = `
+      <div class="ausweis-card">
+        <div class="ausweis-top">
+          <span style="color:#dc2626">MOND-AUSWEIS</span>
+          <span style="color:#475569">DAS MOND-PROJEKT</span>
+        </div>
+        <div class="ausweis-body">
+          <div class="ausweis-avatar">🧑‍🚀</div>
+          <div class="ausweis-info">
+            <div class="ausweis-user">@dein_username</div>
+            <div class="ausweis-sub">Kapsel Nr. <b>1</b> · Gründerkrater</div>
+            <div class="ausweis-role">Aufgabe: 🛡️ <b>Mond-Pionier</b></div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (t >= M.t_vote - 0.2 && t < M.t_mystery - 0.3) {
+    // Card 4: Vertical A / B / C Vote Stack (like camp_frame_12.jpg)
+    const opA = t >= M.t_opt_a - 0.6 ? 1 : 0.45;
+    const opB = t >= M.t_opt_b - 0.6 ? 1 : 0.45;
+    const opC = t >= M.t_opt_c - 0.6 ? 1 : 0.45;
+    cardsEl.innerHTML = `
+      <div class="vote-pill-hdr">🗳️ ABSTIMMUNG #1 · WAS BAUEN WIR?</div>
+      <div class="vote-stack">
+        <div class="vote-row-card" style="opacity:${opA}">
+          <div class="vote-circle" style="background:#ef4444">A</div>
+          <div class="vote-thumb">🧹</div>
+          <div class="vote-text-col">
+            <div class="vote-row-title">Power-Sauger-Lager</div>
+            <div class="vote-row-desc">10x schneller Staub fegen · 300 €</div>
+          </div>
+        </div>
+        <div class="vote-row-card" style="opacity:${opB}">
+          <div class="vote-circle" style="background:#3b82f6">B</div>
+          <div class="vote-thumb">🛸</div>
+          <div class="vote-text-col">
+            <div class="vote-row-title">2. Kapsel-Ring</div>
+            <div class="vote-row-desc">Platz für +100 Follower · 500 €</div>
+          </div>
+        </div>
+        <div class="vote-row-card" style="opacity:${opC}">
+          <div class="vote-circle" style="background:#eab308">C</div>
+          <div class="vote-thumb">🥙</div>
+          <div class="vote-text-col">
+            <div class="vote-row-title">Mond-Dönerladen</div>
+            <div class="vote-row-desc">Döner & Energie für alle · 400 €</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (t >= M.t_mystery - 0.2 && t < M.t_outro - 0.25) {
+    // Card 5: Chronik + Sektor 7 Keycard (like camp_frame_16/18/20.jpg!)
+    const showCard = t >= M.t_sektor7 - 1.2;
+    cardsEl.innerHTML = `
+      <div class="chronik-box">
+        <div class="chronik-top">
+          <div class="chronik-title">📜 DIE CHRONIK</div>
+          <div class="chronik-badge">TEIL 1</div>
+        </div>
+        <div class="chronik-sub">Unter dem Mondstaub freigelegt...</div>
+      </div>
+      ${showCard ? `
+      <div class="keycard-secret">
+        <div class="keycard-hdr">
+          <span>☣️</span>
+          <span>SEKTOR 7 · LABOR NORD</span>
+        </div>
+        <div class="keycard-body">
+          <div class="keycard-photo">?</div>
+          <div class="keycard-lines">
+            <div class="kc-lbl">NAME</div>
+            <div class="kc-redact" style="width:82%"></div>
+            <div class="kc-lbl">ABTEILUNG</div>
+            <div class="kc-redact" style="width:60%"></div>
+            <div class="kc-barcode"></div>
+          </div>
+        </div>
+        <div class="kc-stamp">ZUTRITT NUR FÜR<br/>PERSONAL</div>
+      </div>` : ''}
+    `;
+  } else {
+    cardsEl.innerHTML = '';
+  }
+
+  // ---------- 4. GIANT 1-2 WORD IMPACT CAPTIONS & COLORED PILL BANNER ----------
+  const impactEl = document.getElementById('impact-word');
+  const pillEl = document.getElementById('pill-sub');
+
+  // Show the currently spoken word (or pair of words) in giant high-impact typography!
+  let curWordObj = null;
+  for (let i = 0; i < window.WORDS.length; i++) {
+    if (t >= window.WORDS[i].start - 0.05 && t <= window.WORDS[i].end + 0.15) {
+      curWordObj = window.WORDS[i];
+    }
+  }
+
+  if (isOutro) {
+    impactEl.textContent = 'FORTSETZUNG FOLGT...';
+    impactEl.style.color = '#ffffff';
+    impactEl.style.fontSize = '72px';
+  } else if (curWordObj) {
+    const cleanW = curWordObj.word.toUpperCase();
+    impactEl.textContent = cleanW;
+    impactEl.style.fontSize = cleanW.length > 12 ? '72px' : '94px';
+    // Highlight punchwords in yellow, red, or cyan (just like @das.letzte.camp!)
+    if (/MOND|STADT|STUFEN|FÜNFHUNDERT|EURO|KOMMENTARE|A:|B:|C:/.test(cleanW)) {
+      impactEl.style.color = '#fde047';
+    } else if (/VERDRECKTEN|STAUB|GESPERRTEN|SEKTOR|PERSONAL/.test(cleanW)) {
+      impactEl.style.color = '#f87171';
+    } else if (/SAUBER|ASTRONAUT|FOLLOWER|DÖNERLADEN/.test(cleanW)) {
+      impactEl.style.color = '#34d399';
+    } else {
+      impactEl.style.color = '#ffffff';
+    }
+  } else {
+    impactEl.textContent = '';
+  }
+
+  // Contextual Colored Pill Sub-Banner below the impact word
+  if (t >= 1.8 && t < M.t_overview) {
+    pillEl.style.display = 'flex';
+    pillEl.style.background = '#14b8a6';
+    pillEl.innerHTML = '🚀 WILLKOMMEN AUF DEM MOND';
+  } else if (t >= M.t_overview && t < M.t_stages - 0.3) {
+    pillEl.style.display = 'flex';
+    pillEl.style.background = '#22c55e';
+    pillEl.innerHTML = '🧹 1 FOLLOW = 1 ASTRONAUT AUF DEM MOND';
+  } else if (t >= M.t_punkt - 0.6 && t < M.t_ausweis - 0.3) {
+    pillEl.style.display = 'flex';
+    pillEl.style.background = '#22c55e';
+    pillEl.innerHTML = '💬 1 KOMMENTAR = +1 AUSBAU-PUNKT';
+  } else if (t >= M.t_ausweis && t < M.t_vote - 0.3) {
+    pillEl.style.display = 'flex';
+    pillEl.style.background = '#f59e0b';
+    pillEl.innerHTML = '🪪 BERUFSWUNSCH IN DIE KOMMENTARE';
+  } else if (t >= M.t_vote && t < M.t_mystery - 0.3) {
+    pillEl.style.display = 'flex';
+    pillEl.style.background = '#3b82f6';
+    pillEl.innerHTML = '🗳️ SCHREIB A, B ODER C IN DIE KOMMENTARE';
+  } else {
+    pillEl.style.display = 'none';
+  }
+};
+</script>
+</body>
+</html>
