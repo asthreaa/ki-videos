@@ -1,20 +1,20 @@
 {
-  "duration": 60.92,
-  "raw_speech_end": 60.118,
+  "duration": 61.45,
+  "raw_speech_end": 60.651,
   "markers": {
-    "t_overview": 5.109,
-    "t_stages": 13.451,
-    "t_terminal": 21.168,
-    "t_budget": 25.498,
-    "t_punkt": 29.447,
-    "t_ausweis": 33.062,
-    "t_vote": 38.487,
-    "t_opt_a": 41.893,
-    "t_opt_b": 43.632,
-    "t_opt_c": 46.087,
-    "t_mystery": 50.136,
-    "t_sektor7": 54.565,
-    "t_outro": 59.194
+    "t_overview": 6.072,
+    "t_stages": 15.639,
+    "t_terminal": 22.245,
+    "t_budget": 27.446,
+    "t_punkt": 29.257,
+    "t_ausweis": 32.613,
+    "t_vote": 36.978,
+    "t_opt_a": 40.774,
+    "t_opt_b": 42.725,
+    "t_opt_c": 46.115,
+    "t_mystery": 50.411,
+    "t_sektor7": 54.056,
+    "t_outro": 59.292
   },
-  "word_count": 182
+  "word_count": 171
 }

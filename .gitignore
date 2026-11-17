@@ -1,5 +1,7 @@
 __pycache__/
 *.pyc
+.env
 build/preview_*.jpg
 build/sfx.wav
 build/voice_raw.mp3
+build/voice_raw.wav

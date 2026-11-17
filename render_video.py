@@ -112,11 +112,16 @@ async def render_full_video(fps=30):
 
     # Automatically commit and push rendered video to GitHub (asthreaa/ki-videos)
     try:
-        subprocess.run(["git", "add", out_mp4, "generate_audio.py", "render_video.py", "build/scene.html", "build/timeline.json", "build/words.json", "build/audio_mix.aac"], cwd=WORKSPACE, check=False)
-        subprocess.run(["git", "commit", "-m", "Auto-Upload: Aktualisiertes Video Mond_Projekt_Teil_1.mp4"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "add", ".gitignore", out_mp4, "generate_audio.py", "render_video.py", "build/scene.html", "build/timeline.json", "build/words.json", "build/audio_mix.aac"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "commit", "-m", "Auto-Upload: Teil 1 mit ElevenLabs Voice & exaktem Subtitle-Sync"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=WORKSPACE, check=False)
+        subprocess.run(["git", "push", "origin", "HEAD:master"], cwd=WORKSPACE, check=False)
         subprocess.run(["git", "push", "origin", "ki-videos"], cwd=WORKSPACE, check=False)
-        subprocess.run(["gh", "release", "upload", "teil-1", out_mp4, "--clobber", "--repo", "asthreaa/ki-videos"], cwd=WORKSPACE, check=False)
+        v3_mp4 = os.path.join(WORKSPACE, "Mond_Projekt_Teil_1_v3.mp4")
+        subprocess.run(["cp", out_mp4, v3_mp4], cwd=WORKSPACE, check=False)
+        subprocess.run(["gh", "release", "create", "teil-1-v3", v3_mp4, out_mp4, "--repo", "asthreaa/ki-videos", "--title", "🌕 Das Mond-Projekt – Teil 1 (v3 - ElevenLabs Voice & Perfekter Sync)", "--notes", "Mit natürlicher deutscher ElevenLabs-Stimme, millisekundengenauem Wort-Sync und eigener Follower-Kapsel-Mechanik ab Teil 2.", "--latest"], cwd=WORKSPACE, check=False)
+        subprocess.run(["gh", "release", "upload", "teil-1-v2", out_mp4, "--clobber", "--repo", "asthreaa/ki-videos"], cwd=WORKSPACE, check=False)
+        subprocess.run(["rm", "-f", v3_mp4], cwd=WORKSPACE, check=False)
         print("Automatically pushed video to https://github.com/asthreaa/ki-videos")
     except Exception as e:
         print("Git auto-push warning:", e)

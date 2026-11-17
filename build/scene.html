@@ -1376,10 +1376,10 @@ window.setTime = function(t) {
         </div>
         <div class="vote-row-card" style="opacity:${opB}">
           <div class="vote-circle" style="background:#3b82f6">B</div>
-          <div class="vote-thumb">🛸</div>
+          <div class="vote-thumb">🏭</div>
           <div class="vote-text-col">
-            <div class="vote-row-title">2. Wohn-Kapsel</div>
-            <div class="vote-row-desc">Platz für neue Follower · 500 €</div>
+            <div class="vote-row-title">Staub-Raffinerie</div>
+            <div class="vote-row-desc">Doppeltes Geld beim Verkauf · 500 €</div>
           </div>
         </div>
         <div class="vote-row-card" style="opacity:${opC}">
@@ -1425,34 +1425,43 @@ window.setTime = function(t) {
     cardsEl.innerHTML = '';
   }
 
-  // ---------- 4. GIANT 1-2 WORD IMPACT CAPTIONS & COLORED PILL BANNER ----------
+  // ---------- 4. GIANT 1-2 WORD IMPACT CAPTIONS & COLORED PILL BANNER (100% Frame-Synced to ElevenLabs Alignment!) ----------
   const impactEl = document.getElementById('impact-word');
   const pillEl = document.getElementById('pill-sub');
 
   let curWordObj = null;
   for (let i = 0; i < window.WORDS.length; i++) {
-    if (t >= window.WORDS[i].start - 0.05 && t <= window.WORDS[i].end + 0.15) {
-      curWordObj = window.WORDS[i];
+    const w = window.WORDS[i];
+    const nextStart = (i + 1 < window.WORDS.length) ? window.WORDS[i + 1].start : (w.end + 0.35);
+    const effectiveEnd = Math.min(w.end + 0.22, nextStart);
+    if (t >= w.start && t < effectiveEnd) {
+      curWordObj = w;
+      break;
     }
   }
 
-  if (isOutro) {
-    impactEl.textContent = 'FORTSETZUNG FOLGT...';
-    impactEl.style.color = '#ffffff';
-    impactEl.style.fontSize = '72px';
-  } else if (curWordObj) {
+  if (curWordObj) {
     const cleanW = curWordObj.word.toUpperCase();
     impactEl.textContent = cleanW;
     impactEl.style.fontSize = cleanW.length > 12 ? '72px' : '94px';
-    if (/MOND|STADT|STUFEN|FÜNFHUNDERT|EURO|KOMMENTARE|A:|B:|C:/.test(cleanW)) {
+    const popAge = clamp((t - curWordObj.start) / 0.08, 0, 1);
+    const popScale = 1.0 + 0.09 * (1.0 - popAge);
+    impactEl.style.transform = `scale(${popScale.toFixed(3)})`;
+
+    if (/MOND|STUFEN|FÜNFHUNDERT|EURO|KOMMENTARE|TEIL|ZWEI|A:|B:|C:/.test(cleanW)) {
       impactEl.style.color = '#fde047';
-    } else if (/VERDRECKTEN|STAUB|GESPERRTEN|SEKTOR|PERSONAL/.test(cleanW)) {
+    } else if (/VERDRECKTEN|STAUB|GESPERRTEN|SEKTOR|PERSONAL|ALLEIN/.test(cleanW)) {
       impactEl.style.color = '#f87171';
-    } else if (/SAUBER|ASTRONAUT|FOLLOWER|DÖNERLADEN/.test(cleanW)) {
+    } else if (/SAUBER|KAPSEL|FOLLOWER|DÖNERLADEN|RAFFINERIE/.test(cleanW)) {
       impactEl.style.color = '#34d399';
     } else {
       impactEl.style.color = '#ffffff';
     }
+  } else if (isOutro && t > M.t_outro + 1.1) {
+    impactEl.textContent = 'TEIL 2 FOLGT...';
+    impactEl.style.color = '#fde047';
+    impactEl.style.fontSize = '82px';
+    impactEl.style.transform = 'scale(1)';
   } else {
     impactEl.textContent = '';
   }
@@ -1464,11 +1473,11 @@ window.setTime = function(t) {
   } else if (t >= M.t_overview && t < M.t_stages - 0.3) {
     pillEl.style.display = 'flex';
     pillEl.style.background = '#22c55e';
-    pillEl.innerHTML = '🧹 1 FOLLOW = 1 ASTRONAUT AUF DEM MOND';
+    pillEl.innerHTML = '🛸 AB TEIL 2: 1 FOLLOW = 1 EIGENE KAPSEL & MITFEGEN';
   } else if (t >= M.t_punkt - 0.6 && t < M.t_ausweis - 0.3) {
     pillEl.style.display = 'flex';
     pillEl.style.background = '#22c55e';
-    pillEl.innerHTML = '💬 1 KOMMENTAR = +1 AUSBAU-PUNKT';
+    pillEl.innerHTML = '💬 1 KOMMENTAR = +1 KAPSEL-PUNKT';
   } else if (t >= M.t_ausweis && t < M.t_vote - 0.3) {
     pillEl.style.display = 'flex';
     pillEl.style.background = '#f59e0b';

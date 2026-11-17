@@ -1,912 +1,857 @@
 [
   {
     "word": "Tag",
-    "start": 0.086,
-    "end": 0.295
+    "start": 0.0,
+    "end": 0.244
   },
   {
     "word": "eins",
-    "start": 0.304,
-    "end": 0.494
+    "start": 0.313,
+    "end": 0.569
   },
   {
     "word": "auf",
-    "start": 0.503,
-    "end": 0.584
+    "start": 0.627,
+    "end": 0.708
   },
   {
     "word": "dem",
-    "start": 0.593,
-    "end": 0.711
+    "start": 0.755,
+    "end": 0.871
   },
   {
     "word": "völlig",
-    "start": 0.72,
-    "end": 0.965
+    "start": 0.975,
+    "end": 1.277
   },
   {
     "word": "verdreckten",
-    "start": 0.974,
-    "end": 1.354
+    "start": 1.312,
+    "end": 1.718
   },
   {
     "word": "Mond!",
-    "start": 1.363,
-    "end": 1.671
+    "start": 1.753,
+    "end": 2.171
   },
   {
     "word": "Willkommen",
-    "start": 2.283,
-    "end": 2.708
+    "start": 2.844,
+    "end": 3.286
   },
   {
     "word": "in",
-    "start": 2.717,
-    "end": 2.817
+    "start": 3.344,
+    "end": 3.39
   },
   {
     "word": "unserer",
-    "start": 2.826,
-    "end": 3.134
+    "start": 3.448,
+    "end": 3.657
   },
   {
     "word": "allerersten",
-    "start": 3.143,
-    "end": 3.533
+    "start": 3.75,
+    "end": 4.493
   },
   {
     "word": "Mond-Basis!",
-    "start": 3.542,
-    "end": 4.13
+    "start": 4.54,
+    "end": 5.283
   },
   {
-    "word": "Ab",
-    "start": 4.755,
-    "end": 4.891
+    "word": "Noch",
+    "start": 6.072,
+    "end": 6.235
   },
   {
-    "word": "heute",
-    "start": 4.9,
-    "end": 5.1
+    "word": "bin",
+    "start": 6.269,
+    "end": 6.374
   },
   {
-    "word": "fegen",
-    "start": 5.109,
-    "end": 5.326
-  },
-  {
-    "word": "wir",
-    "start": 5.335,
-    "end": 5.417
-  },
-  {
-    "word": "diesen",
-    "start": 5.426,
-    "end": 5.625
-  },
-  {
-    "word": "Planeten",
-    "start": 5.634,
-    "end": 6.033
-  },
-  {
-    "word": "Stück",
-    "start": 6.042,
-    "end": 6.232
-  },
-  {
-    "word": "für",
-    "start": 6.241,
-    "end": 6.368
-  },
-  {
-    "word": "Stück",
-    "start": 6.377,
-    "end": 6.567
-  },
-  {
-    "word": "frei",
-    "start": 6.576,
-    "end": 6.812
-  },
-  {
-    "word": "und",
-    "start": 6.821,
-    "end": 6.984
-  },
-  {
-    "word": "bauen",
-    "start": 6.993,
-    "end": 7.274
-  },
-  {
-    "word": "aus",
-    "start": 7.283,
-    "end": 7.419
-  },
-  {
-    "word": "einer",
-    "start": 7.428,
-    "end": 7.6
-  },
-  {
-    "word": "winzigen",
-    "start": 7.609,
-    "end": 7.953
-  },
-  {
-    "word": "Kapsel",
-    "start": 7.962,
-    "end": 8.27
-  },
-  {
-    "word": "eine",
-    "start": 8.279,
-    "end": 8.433
-  },
-  {
-    "word": "riesige",
-    "start": 8.442,
-    "end": 8.732
-  },
-  {
-    "word": "Stadt!",
-    "start": 8.741,
-    "end": 9.04
-  },
-  {
-    "word": "Jeder",
-    "start": 9.665,
-    "end": 9.937
-  },
-  {
-    "word": "neue",
-    "start": 9.946,
-    "end": 10.172
-  },
-  {
-    "word": "Follower",
-    "start": 10.181,
-    "end": 10.489
-  },
-  {
-    "word": "zieht",
-    "start": 10.498,
-    "end": 10.716
-  },
-  {
-    "word": "als",
-    "start": 10.725,
-    "end": 10.879
-  },
-  {
-    "word": "Astronaut",
-    "start": 10.888,
-    "end": 11.268
+    "word": "ich",
+    "start": 6.397,
+    "end": 6.467
   },
   {
     "word": "hier",
-    "start": 11.277,
-    "end": 11.413
+    "start": 6.49,
+    "end": 6.606
   },
   {
-    "word": "ein!",
-    "start": 11.422,
-    "end": 11.694
+    "word": "oben",
+    "start": 6.653,
+    "end": 6.861
   },
   {
-    "word": "Aus",
-    "start": 12.319,
-    "end": 12.455
+    "word": "komplett",
+    "start": 6.931,
+    "end": 7.233
   },
   {
-    "word": "Staub",
-    "start": 12.464,
-    "end": 12.69
+    "word": "allein",
+    "start": 7.279,
+    "end": 7.57
   },
   {
-    "word": "wird",
-    "start": 12.699,
-    "end": 12.844
-  },
-  {
-    "word": "Zukunft:",
-    "start": 12.853,
-    "end": 13.279
-  },
-  {
-    "word": "Zwölf",
-    "start": 13.451,
-    "end": 13.705
-  },
-  {
-    "word": "Stufen",
-    "start": 13.714,
-    "end": 14.04
-  },
-  {
-    "word": "vom",
-    "start": 14.049,
-    "end": 14.221
-  },
-  {
-    "word": "einfachen",
-    "start": 14.23,
-    "end": 14.583
-  },
-  {
-    "word": "Schrubber",
-    "start": 14.592,
-    "end": 14.891
-  },
-  {
-    "word": "und",
-    "start": 14.9,
-    "end": 15.045
-  },
-  {
-    "word": "Zelt",
-    "start": 15.054,
-    "end": 15.308
-  },
-  {
-    "word": "bis",
-    "start": 15.317,
-    "end": 15.471
-  },
-  {
-    "word": "zur",
-    "start": 15.48,
-    "end": 15.616
-  },
-  {
-    "word": "gigantischen",
-    "start": 15.625,
-    "end": 16.042
-  },
-  {
-    "word": "Mond-Krone!",
-    "start": 16.051,
-    "end": 16.558
-  },
-  {
-    "word": "Ausbauen",
-    "start": 17.183,
-    "end": 17.6
-  },
-  {
-    "word": "können",
-    "start": 17.609,
-    "end": 17.808
-  },
-  {
-    "word": "wir",
-    "start": 17.817,
-    "end": 17.889
-  },
-  {
-    "word": "die",
-    "start": 17.899,
-    "end": 17.98
-  },
-  {
-    "word": "Basis",
-    "start": 17.989,
-    "end": 18.297
-  },
-  {
-    "word": "gemeinsam",
-    "start": 18.306,
-    "end": 18.732
-  },
-  {
-    "word": "in",
-    "start": 18.741,
-    "end": 18.859
-  },
-  {
-    "word": "jedem",
-    "start": 18.868,
-    "end": 19.094
-  },
-  {
-    "word": "Video!",
-    "start": 19.103,
-    "end": 19.456
-  },
-  {
-    "word": "Wir",
-    "start": 20.081,
-    "end": 20.281
-  },
-  {
-    "word": "fegen",
-    "start": 20.29,
-    "end": 20.48
-  },
-  {
-    "word": "den",
-    "start": 20.489,
-    "end": 20.598
-  },
-  {
-    "word": "Mondstaub",
-    "start": 20.607,
-    "end": 21.033
-  },
-  {
-    "word": "und",
-    "start": 21.042,
-    "end": 21.159
-  },
-  {
-    "word": "verkaufen",
-    "start": 21.168,
-    "end": 21.549
-  },
-  {
-    "word": "ihn",
-    "start": 21.558,
-    "end": 21.676
-  },
-  {
-    "word": "direkt",
-    "start": 21.685,
-    "end": 21.975
-  },
-  {
-    "word": "am",
-    "start": 21.984,
-    "end": 22.065
-  },
-  {
-    "word": "Terminal!",
-    "start": 22.074,
-    "end": 22.527
-  },
-  {
-    "word": "Der",
-    "start": 23.152,
-    "end": 23.279
-  },
-  {
-    "word": "erste",
-    "start": 23.288,
-    "end": 23.524
-  },
-  {
-    "word": "Ring",
-    "start": 23.533,
-    "end": 23.668
-  },
-  {
-    "word": "vor",
-    "start": 23.678,
-    "end": 23.813
-  },
-  {
-    "word": "der",
-    "start": 23.822,
-    "end": 23.922
-  },
-  {
-    "word": "Schleuse",
-    "start": 23.931,
-    "end": 24.284
-  },
-  {
-    "word": "ist",
-    "start": 24.293,
-    "end": 24.438
-  },
-  {
-    "word": "sauber",
-    "start": 24.447,
-    "end": 24.647
-  },
-  {
-    "word": "das",
-    "start": 24.656,
-    "end": 24.801
-  },
-  {
-    "word": "bringt",
-    "start": 24.81,
-    "end": 25.027
-  },
-  {
-    "word": "uns",
-    "start": 25.036,
-    "end": 25.199
-  },
-  {
-    "word": "direkt",
-    "start": 25.208,
-    "end": 25.489
-  },
-  {
-    "word": "fünfhundert",
-    "start": 25.498,
-    "end": 25.906
-  },
-  {
-    "word": "Euro",
-    "start": 25.915,
-    "end": 26.069
-  },
-  {
-    "word": "Startbudget!",
-    "start": 26.078,
-    "end": 26.676
-  },
-  {
-    "word": "Und",
-    "start": 27.301,
-    "end": 27.482
+    "word": "aber",
+    "start": 7.93,
+    "end": 8.127
   },
   {
     "word": "ab",
-    "start": 27.491,
-    "end": 27.6
+    "start": 8.162,
+    "end": 8.266
   },
   {
-    "word": "sofort",
-    "start": 27.609,
-    "end": 27.899
+    "word": "Teil",
+    "start": 8.348,
+    "end": 8.51
   },
   {
-    "word": "gilt:",
-    "start": 27.908,
-    "end": 28.134
+    "word": "zwei",
+    "start": 8.568,
+    "end": 8.986
   },
   {
-    "word": "Pro",
-    "start": 28.297,
-    "end": 28.451
+    "word": "fliegt",
+    "start": 9.311,
+    "end": 9.567
   },
   {
-    "word": "Kommentar",
-    "start": 28.46,
-    "end": 28.85
-  },
-  {
-    "word": "bekommst",
-    "start": 28.859,
-    "end": 29.158
-  },
-  {
-    "word": "du",
-    "start": 29.167,
-    "end": 29.248
-  },
-  {
-    "word": "einen",
-    "start": 29.257,
-    "end": 29.438
-  },
-  {
-    "word": "Ausbau-Punkt",
-    "start": 29.447,
-    "end": 29.973
-  },
-  {
-    "word": "für",
-    "start": 29.982,
-    "end": 30.091
-  },
-  {
-    "word": "deine",
-    "start": 30.1,
-    "end": 30.317
-  },
-  {
-    "word": "eigene",
-    "start": 30.326,
-    "end": 30.58
-  },
-  {
-    "word": "Kapsel!",
-    "start": 30.589,
-    "end": 30.969
-  },
-  {
-    "word": "Jeder",
-    "start": 31.594,
-    "end": 31.902
-  },
-  {
-    "word": "von",
-    "start": 31.911,
-    "end": 32.056
-  },
-  {
-    "word": "euch",
-    "start": 32.065,
-    "end": 32.219
-  },
-  {
-    "word": "bekommt",
-    "start": 32.228,
-    "end": 32.509
-  },
-  {
-    "word": "seinen",
-    "start": 32.518,
-    "end": 32.781
-  },
-  {
-    "word": "eigenen",
-    "start": 32.79,
-    "end": 33.052
-  },
-  {
-    "word": "Mond-Ausweis!",
-    "start": 33.062,
-    "end": 33.641
-  },
-  {
-    "word": "Schreib",
-    "start": 34.266,
-    "end": 34.547
-  },
-  {
-    "word": "deinen",
-    "start": 34.556,
-    "end": 34.783
-  },
-  {
-    "word": "Berufswunsch,",
-    "start": 34.792,
-    "end": 35.308
-  },
-  {
-    "word": "Nachbarwunsch",
-    "start": 35.444,
-    "end": 35.969
-  },
-  {
-    "word": "und",
-    "start": 35.978,
-    "end": 36.114
-  },
-  {
-    "word": "Gebäudewunsch",
-    "start": 36.123,
-    "end": 36.63
-  },
-  {
-    "word": "jetzt",
-    "start": 36.639,
-    "end": 36.884
-  },
-  {
-    "word": "in",
-    "start": 36.893,
-    "end": 36.966
-  },
-  {
-    "word": "die",
-    "start": 36.975,
-    "end": 37.047
-  },
-  {
-    "word": "Kommentare!",
-    "start": 37.056,
-    "end": 37.627
-  },
-  {
-    "word": "Was",
-    "start": 38.252,
-    "end": 38.478
-  },
-  {
-    "word": "bauen",
-    "start": 38.487,
-    "end": 38.714
-  },
-  {
-    "word": "wir",
-    "start": 38.723,
-    "end": 38.832
-  },
-  {
-    "word": "von",
-    "start": 38.841,
-    "end": 39.022
-  },
-  {
-    "word": "unseren",
-    "start": 39.031,
-    "end": 39.357
-  },
-  {
-    "word": "fünfhundert",
-    "start": 39.366,
-    "end": 39.828
-  },
-  {
-    "word": "Euro",
-    "start": 39.837,
-    "end": 40.036
-  },
-  {
-    "word": "zuerst?",
-    "start": 40.045,
-    "end": 40.516
-  },
-  {
-    "word": "A:",
-    "start": 41.141,
-    "end": 41.304
-  },
-  {
-    "word": "Das",
-    "start": 41.431,
-    "end": 41.594
-  },
-  {
-    "word": "große",
-    "start": 41.603,
-    "end": 41.884
-  },
-  {
-    "word": "Power-Sauger-Lager,",
-    "start": 41.893,
-    "end": 42.654
-  },
-  {
-    "word": "B:",
-    "start": 42.754,
-    "end": 42.962
-  },
-  {
-    "word": "Den",
-    "start": 43.107,
-    "end": 43.279
-  },
-  {
-    "word": "zweiten",
-    "start": 43.288,
-    "end": 43.623
-  },
-  {
-    "word": "Kapsel-Ring",
-    "start": 43.632,
-    "end": 44.094
-  },
-  {
-    "word": "für",
-    "start": 44.103,
-    "end": 44.257
+    "word": "jeder",
+    "start": 9.659,
+    "end": 9.834
   },
   {
     "word": "neue",
-    "start": 44.266,
-    "end": 44.493
+    "start": 9.88,
+    "end": 10.066
   },
   {
-    "word": "Follower,",
-    "start": 44.502,
-    "end": 44.873
+    "word": "Follower",
+    "start": 10.136,
+    "end": 10.461
   },
   {
-    "word": "oder",
-    "start": 45.081,
-    "end": 45.226
+    "word": "automatisch",
+    "start": 10.553,
+    "end": 11.146
   },
   {
-    "word": "C:",
-    "start": 45.236,
-    "end": 45.498
-  },
-  {
-    "word": "Den",
-    "start": 45.652,
-    "end": 45.824
-  },
-  {
-    "word": "ersten",
-    "start": 45.833,
-    "end": 46.078
-  },
-  {
-    "word": "Mond-Dönerladen?",
-    "start": 46.087,
-    "end": 46.784
-  },
-  {
-    "word": "Schreib",
-    "start": 47.409,
-    "end": 47.708
-  },
-  {
-    "word": "A,",
-    "start": 47.717,
-    "end": 47.862
-  },
-  {
-    "word": "B",
-    "start": 48.025,
-    "end": 48.17
-  },
-  {
-    "word": "oder",
-    "start": 48.179,
-    "end": 48.342
-  },
-  {
-    "word": "C",
-    "start": 48.351,
-    "end": 48.542
-  },
-  {
-    "word": "in",
-    "start": 48.551,
-    "end": 48.632
-  },
-  {
-    "word": "die",
-    "start": 48.641,
-    "end": 48.714
-  },
-  {
-    "word": "Kommentare!",
-    "start": 48.723,
-    "end": 49.33
-  },
-  {
-    "word": "Doch",
-    "start": 49.955,
-    "end": 50.127
-  },
-  {
-    "word": "wartet",
-    "start": 50.136,
-    "end": 50.408
-  },
-  {
-    "word": "mal:",
-    "start": 50.417,
-    "end": 50.571
-  },
-  {
-    "word": "Beim",
-    "start": 50.725,
-    "end": 50.888
-  },
-  {
-    "word": "Fegen",
-    "start": 50.897,
-    "end": 51.196
-  },
-  {
-    "word": "haben",
-    "start": 51.205,
-    "end": 51.404
-  },
-  {
-    "word": "wir",
-    "start": 51.413,
-    "end": 51.495
-  },
-  {
-    "word": "unter",
-    "start": 51.504,
-    "end": 51.649
-  },
-  {
-    "word": "dem",
-    "start": 51.658,
-    "end": 51.757
-  },
-  {
-    "word": "Staub",
-    "start": 51.766,
-    "end": 52.02
-  },
-  {
-    "word": "etwas",
-    "start": 52.029,
-    "end": 52.265
-  },
-  {
-    "word": "gefunden.",
-    "start": 52.274,
-    "end": 52.745
-  },
-  {
-    "word": "Einen",
-    "start": 53.37,
-    "end": 53.587
-  },
-  {
-    "word": "gesperrten",
-    "start": 53.596,
-    "end": 53.985
-  },
-  {
-    "word": "Ausweis:",
-    "start": 53.995,
-    "end": 54.402
-  },
-  {
-    "word": "Sektor",
-    "start": 54.565,
-    "end": 54.873
-  },
-  {
-    "word": "Sieben",
-    "start": 54.882,
-    "end": 55.109
-  },
-  {
-    "word": "Zutritt",
-    "start": 55.118,
-    "end": 55.453
-  },
-  {
-    "word": "nur",
-    "start": 55.462,
-    "end": 55.562
-  },
-  {
-    "word": "für",
-    "start": 55.571,
-    "end": 55.679
-  },
-  {
-    "word": "Personal!",
-    "start": 55.688,
-    "end": 56.168
-  },
-  {
-    "word": "Irgendjemand",
-    "start": 56.784,
-    "end": 57.355
-  },
-  {
-    "word": "war",
-    "start": 57.364,
-    "end": 57.482
-  },
-  {
-    "word": "schon",
-    "start": 57.491,
-    "end": 57.663
-  },
-  {
-    "word": "vor",
-    "start": 57.672,
-    "end": 57.844
-  },
-  {
-    "word": "uns",
-    "start": 57.853,
-    "end": 58.016
+    "word": "mit",
+    "start": 11.204,
+    "end": 11.296
   },
   {
     "word": "auf",
-    "start": 58.025,
-    "end": 58.116
+    "start": 11.331,
+    "end": 11.401
+  },
+  {
+    "word": "den",
+    "start": 11.447,
+    "end": 11.54
+  },
+  {
+    "word": "Mond,",
+    "start": 11.587,
+    "end": 12.005
+  },
+  {
+    "word": "kriegt",
+    "start": 12.214,
+    "end": 12.376
+  },
+  {
+    "word": "sofort",
+    "start": 12.399,
+    "end": 12.666
+  },
+  {
+    "word": "seine",
+    "start": 12.69,
+    "end": 12.829
+  },
+  {
+    "word": "eigene",
+    "start": 12.876,
+    "end": 13.073
+  },
+  {
+    "word": "Kapsel",
+    "start": 13.119,
+    "end": 13.445
+  },
+  {
+    "word": "und",
+    "start": 13.816,
+    "end": 13.967
+  },
+  {
+    "word": "hilft",
+    "start": 14.025,
+    "end": 14.211
+  },
+  {
+    "word": "beim",
+    "start": 14.246,
+    "end": 14.35
+  },
+  {
+    "word": "Saubermachen!",
+    "start": 14.385,
+    "end": 14.849
+  },
+  {
+    "word": "Deine",
+    "start": 15.639,
+    "end": 15.894
+  },
+  {
+    "word": "eigene",
+    "start": 15.929,
+    "end": 16.103
+  },
+  {
+    "word": "Kapsel",
+    "start": 16.138,
+    "end": 16.393
+  },
+  {
+    "word": "kannst",
+    "start": 16.452,
+    "end": 16.626
+  },
+  {
+    "word": "du",
+    "start": 16.649,
+    "end": 16.695
+  },
+  {
+    "word": "dann",
+    "start": 16.742,
+    "end": 16.881
+  },
+  {
+    "word": "in",
+    "start": 16.939,
+    "end": 17.02
+  },
+  {
+    "word": "zwölf",
+    "start": 17.09,
+    "end": 17.392
+  },
+  {
+    "word": "Stufen",
+    "start": 17.45,
+    "end": 17.729
+  },
+  {
+    "word": "ausbauen",
+    "start": 17.763,
+    "end": 18.135
+  },
+  {
+    "word": "vom",
+    "start": 18.727,
+    "end": 18.936
+  },
+  {
+    "word": "einfachen",
+    "start": 19.029,
+    "end": 19.308
+  },
+  {
+    "word": "Starter-Zelt",
+    "start": 19.331,
+    "end": 19.888
+  },
+  {
+    "word": "bis",
+    "start": 19.958,
+    "end": 20.085
+  },
+  {
+    "word": "zur",
+    "start": 20.167,
+    "end": 20.248
+  },
+  {
+    "word": "gigantischen",
+    "start": 20.271,
+    "end": 20.643
+  },
+  {
+    "word": "Mond-Krone!",
+    "start": 20.666,
+    "end": 21.281
+  },
+  {
+    "word": "Ich",
+    "start": 22.071,
+    "end": 22.21
+  },
+  {
+    "word": "fege",
+    "start": 22.245,
+    "end": 22.442
+  },
+  {
+    "word": "jetzt",
+    "start": 22.477,
+    "end": 22.628
+  },
+  {
+    "word": "den",
+    "start": 22.651,
+    "end": 22.744
+  },
+  {
+    "word": "ersten",
+    "start": 22.814,
+    "end": 23.058
+  },
+  {
+    "word": "Bereich",
+    "start": 23.081,
+    "end": 23.325
+  },
+  {
+    "word": "vor",
+    "start": 23.371,
+    "end": 23.441
+  },
+  {
+    "word": "der",
+    "start": 23.464,
+    "end": 23.534
+  },
+  {
+    "word": "Schleuse",
+    "start": 23.557,
+    "end": 23.87
+  },
+  {
+    "word": "frei",
+    "start": 23.917,
+    "end": 24.265
+  },
+  {
+    "word": "und",
+    "start": 24.637,
+    "end": 24.811
+  },
+  {
+    "word": "verkaufe",
+    "start": 24.88,
+    "end": 25.206
+  },
+  {
+    "word": "den",
+    "start": 25.229,
+    "end": 25.322
+  },
+  {
+    "word": "Staub",
+    "start": 25.368,
+    "end": 25.6
+  },
+  {
+    "word": "direkt",
+    "start": 25.658,
+    "end": 25.891
+  },
+  {
+    "word": "am",
+    "start": 25.914,
+    "end": 25.972
+  },
+  {
+    "word": "Terminal!",
+    "start": 26.018,
+    "end": 26.459
+  },
+  {
+    "word": "Das",
+    "start": 26.726,
+    "end": 26.854
+  },
+  {
+    "word": "bringt",
+    "start": 26.889,
+    "end": 27.028
+  },
+  {
+    "word": "uns",
+    "start": 27.063,
+    "end": 27.144
+  },
+  {
+    "word": "sofort",
+    "start": 27.168,
+    "end": 27.423
+  },
+  {
+    "word": "fünfhundert",
+    "start": 27.446,
+    "end": 27.76
+  },
+  {
+    "word": "Euro!",
+    "start": 27.806,
+    "end": 28.12
+  },
+  {
+    "word": "Und",
+    "start": 28.166,
+    "end": 28.259
+  },
+  {
+    "word": "pro",
+    "start": 28.294,
+    "end": 28.375
+  },
+  {
+    "word": "Kommentar",
+    "start": 28.422,
+    "end": 28.665
+  },
+  {
+    "word": "bekommst",
+    "start": 28.7,
+    "end": 28.932
+  },
+  {
+    "word": "du",
+    "start": 28.956,
+    "end": 29.002
+  },
+  {
+    "word": "einen",
+    "start": 29.048,
+    "end": 29.165
+  },
+  {
+    "word": "Ausbau-Punkt",
+    "start": 29.257,
+    "end": 29.768
+  },
+  {
+    "word": "für",
+    "start": 29.792,
+    "end": 29.861
+  },
+  {
+    "word": "deine",
+    "start": 29.884,
+    "end": 30.012
+  },
+  {
+    "word": "Kapsel!",
+    "start": 30.035,
+    "end": 30.43
+  },
+  {
+    "word": "Jeder",
+    "start": 31.011,
+    "end": 31.254
+  },
+  {
+    "word": "Follower",
+    "start": 31.301,
+    "end": 31.568
+  },
+  {
+    "word": "bekommt",
+    "start": 31.603,
+    "end": 31.812
+  },
+  {
+    "word": "außerdem",
+    "start": 31.846,
+    "end": 32.09
+  },
+  {
+    "word": "seinen",
+    "start": 32.113,
+    "end": 32.264
+  },
+  {
+    "word": "eigenen",
+    "start": 32.334,
+    "end": 32.566
+  },
+  {
+    "word": "Mond-Ausweis!",
+    "start": 32.613,
+    "end": 33.251
+  },
+  {
+    "word": "Schreib",
+    "start": 33.623,
+    "end": 33.82
+  },
+  {
+    "word": "deinen",
+    "start": 33.855,
+    "end": 34.18
+  },
+  {
+    "word": "Berufswunsch",
+    "start": 34.273,
+    "end": 34.807
+  },
+  {
+    "word": "und",
+    "start": 34.888,
+    "end": 34.969
+  },
+  {
+    "word": "Nachbarwunsch",
+    "start": 35.016,
+    "end": 35.469
+  },
+  {
+    "word": "jetzt",
+    "start": 35.84,
+    "end": 36.014
+  },
+  {
+    "word": "in",
+    "start": 36.049,
+    "end": 36.096
+  },
+  {
+    "word": "die",
+    "start": 36.119,
+    "end": 36.189
+  },
+  {
+    "word": "Kommentare!",
+    "start": 36.212,
+    "end": 36.711
+  },
+  {
+    "word": "Was",
+    "start": 36.978,
+    "end": 37.117
+  },
+  {
+    "word": "bauen",
+    "start": 37.164,
+    "end": 37.303
+  },
+  {
+    "word": "wir",
+    "start": 37.326,
+    "end": 37.396
+  },
+  {
+    "word": "in",
+    "start": 37.419,
+    "end": 37.466
+  },
+  {
+    "word": "Teil",
+    "start": 37.512,
+    "end": 37.675
+  },
+  {
+    "word": "zwei",
+    "start": 37.733,
+    "end": 37.918
+  },
+  {
+    "word": "von",
+    "start": 37.953,
+    "end": 38.035
+  },
+  {
+    "word": "unseren",
+    "start": 38.081,
+    "end": 38.278
+  },
+  {
+    "word": "fünfhundert",
+    "start": 38.313,
+    "end": 38.615
+  },
+  {
+    "word": "Euro",
+    "start": 38.65,
+    "end": 38.812
+  },
+  {
+    "word": "zuerst?",
+    "start": 38.847,
+    "end": 39.335
+  },
+  {
+    "word": "A:",
+    "start": 39.706,
+    "end": 40.101
+  },
+  {
+    "word": "Das",
+    "start": 40.24,
+    "end": 40.565
+  },
+  {
+    "word": "Power-Sauger-Lager,",
+    "start": 40.774,
+    "end": 41.75
+  },
+  {
+    "word": "B:",
+    "start": 42.075,
+    "end": 42.4
+  },
+  {
+    "word": "Die",
+    "start": 42.539,
+    "end": 42.679
+  },
+  {
+    "word": "Staub-Raffinerie",
+    "start": 42.725,
+    "end": 43.549
+  },
+  {
+    "word": "für",
+    "start": 43.689,
+    "end": 43.839
+  },
+  {
+    "word": "doppeltes",
+    "start": 43.863,
+    "end": 44.153
+  },
+  {
+    "word": "Geld,",
+    "start": 44.188,
+    "end": 44.524
+  },
+  {
+    "word": "oder",
+    "start": 44.85,
+    "end": 45.047
+  },
+  {
+    "word": "C:",
+    "start": 45.082,
+    "end": 45.442
+  },
+  {
+    "word": "Den",
+    "start": 45.674,
+    "end": 45.813
+  },
+  {
+    "word": "ersten",
+    "start": 45.883,
+    "end": 46.092
+  },
+  {
+    "word": "Mond-Dönerladen?",
+    "start": 46.115,
+    "end": 46.893
+  },
+  {
+    "word": "Schreib",
+    "start": 47.218,
+    "end": 47.485
+  },
+  {
+    "word": "A,",
+    "start": 47.752,
+    "end": 48.158
+  },
+  {
+    "word": "B",
+    "start": 48.286,
+    "end": 48.425
+  },
+  {
+    "word": "oder",
+    "start": 48.797,
+    "end": 49.006
+  },
+  {
+    "word": "C",
+    "start": 49.052,
+    "end": 49.18
+  },
+  {
+    "word": "in",
+    "start": 49.447,
+    "end": 49.528
+  },
+  {
+    "word": "die",
+    "start": 49.551,
+    "end": 49.621
+  },
+  {
+    "word": "Kommentare!",
+    "start": 49.644,
+    "end": 50.12
+  },
+  {
+    "word": "Doch",
+    "start": 50.248,
+    "end": 50.387
+  },
+  {
+    "word": "wartet",
+    "start": 50.411,
+    "end": 50.596
+  },
+  {
+    "word": "mal:",
+    "start": 50.643,
+    "end": 50.933
+  },
+  {
+    "word": "Unter",
+    "start": 51.2,
+    "end": 51.386
   },
   {
     "word": "dem",
-    "start": 58.125,
-    "end": 58.234
+    "start": 51.409,
+    "end": 51.49
   },
   {
-    "word": "Mond...",
-    "start": 58.243,
-    "end": 58.569
+    "word": "Staub",
+    "start": 51.537,
+    "end": 51.827
   },
   {
-    "word": "Fortsetzung",
-    "start": 59.194,
-    "end": 59.746
+    "word": "hab",
+    "start": 52.036,
+    "end": 52.187
   },
   {
-    "word": "folgt!",
-    "start": 59.755,
-    "end": 60.118
+    "word": "ich",
+    "start": 52.233,
+    "end": 52.303
+  },
+  {
+    "word": "gerade",
+    "start": 52.338,
+    "end": 52.616
+  },
+  {
+    "word": "diesen",
+    "start": 52.64,
+    "end": 52.791
+  },
+  {
+    "word": "gesperrten",
+    "start": 52.814,
+    "end": 53.197
+  },
+  {
+    "word": "Ausweis",
+    "start": 53.232,
+    "end": 53.452
+  },
+  {
+    "word": "gefunden:",
+    "start": 53.499,
+    "end": 53.928
+  },
+  {
+    "word": "Sektor",
+    "start": 54.056,
+    "end": 54.323
+  },
+  {
+    "word": "Sieben",
+    "start": 54.358,
+    "end": 54.567
+  },
+  {
+    "word": "Zutritt",
+    "start": 54.973,
+    "end": 55.345
+  },
+  {
+    "word": "nur",
+    "start": 55.403,
+    "end": 55.519
+  },
+  {
+    "word": "für",
+    "start": 55.542,
+    "end": 55.647
+  },
+  {
+    "word": "Personal!",
+    "start": 55.67,
+    "end": 56.274
+  },
+  {
+    "word": "Irgendjemand",
+    "start": 57.527,
+    "end": 57.899
+  },
+  {
+    "word": "war",
+    "start": 57.934,
+    "end": 58.003
+  },
+  {
+    "word": "schon",
+    "start": 58.027,
+    "end": 58.189
+  },
+  {
+    "word": "vor",
+    "start": 58.259,
+    "end": 58.398
+  },
+  {
+    "word": "uns",
+    "start": 58.421,
+    "end": 58.514
+  },
+  {
+    "word": "hier",
+    "start": 58.538,
+    "end": 58.63
+  },
+  {
+    "word": "oben...",
+    "start": 58.665,
+    "end": 59.025
+  },
+  {
+    "word": "Folg",
+    "start": 59.292,
+    "end": 59.466
+  },
+  {
+    "word": "rein",
+    "start": 59.513,
+    "end": 59.675
+  },
+  {
+    "word": "für",
+    "start": 59.722,
+    "end": 59.849
+  },
+  {
+    "word": "Teil",
+    "start": 59.896,
+    "end": 60.035
+  },
+  {
+    "word": "zwei!",
+    "start": 60.093,
+    "end": 60.651
   }
 ]

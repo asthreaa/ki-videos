@@ -1,18 +1,30 @@
-import asyncio
+import base64
 import json
 import os
-import re
 import subprocess
 import wave
 import numpy as np
-import edge_tts
+import requests
 import imageio_ffmpeg
 
 WORKSPACE = "/home/orca/orca/workspaces/ki videos/ki-videos"
 BUILD_DIR = os.path.join(WORKSPACE, "build")
 os.makedirs(BUILD_DIR, exist_ok=True)
 
-# High-retention ~60s script modeled on @das.letzte.camp + Moon Sweepers (no spoilers for cleaning car or aliens!)
+def load_env():
+    env_path = os.path.join(WORKSPACE, ".env")
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip()
+
+# Updated script:
+# - Part 1 has ONLY the founder (1 Bewohner); followers arrive in Part 2!
+# - Every new follower automatically flies to the Moon in Part 2, gets their OWN capsule, and helps clean!
+# - The 500 € vote is for base upgrades (Power-Sauger, Staub-Raffinerie, Mond-Dönerladen), NOT for buying follower capsules!
 SEGMENTS = [
     {
         "id": "hook_closeup",
@@ -20,68 +32,112 @@ SEGMENTS = [
     },
     {
         "id": "overview_goal",
-        "text": "Ab heute fegen wir diesen Planeten Stück für Stück frei und bauen aus einer winzigen Kapsel eine riesige Stadt! Jeder neue Follower zieht als Astronaut hier ein!"
+        "text": "Noch bin ich hier oben komplett allein – aber ab Teil zwei fliegt jeder neue Follower automatisch mit auf den Mond, kriegt sofort seine eigene Kapsel und hilft beim Saubermachen!"
     },
     {
         "id": "stages_grid",
-        "text": "Aus Staub wird Zukunft: Zwölf Stufen – vom einfachen Schrubber und Zelt bis zur gigantischen Mond-Krone! Ausbauen können wir die Basis gemeinsam in jedem Video!"
+        "text": "Deine eigene Kapsel kannst du dann in zwölf Stufen ausbauen – vom einfachen Starter-Zelt bis zur gigantischen Mond-Krone!"
     },
     {
         "id": "dust_counter",
-        "text": "Wir fegen den Mondstaub und verkaufen ihn direkt am Terminal! Der erste Ring vor der Schleuse ist sauber – das bringt uns direkt fünfhundert Euro Startbudget! Und ab sofort gilt: Pro Kommentar bekommst du einen Ausbau-Punkt für deine eigene Kapsel!"
+        "text": "Ich fege jetzt den ersten Bereich vor der Schleuse frei und verkaufe den Staub direkt am Terminal! Das bringt uns sofort fünfhundert Euro! Und pro Kommentar bekommst du einen Ausbau-Punkt für deine Kapsel!"
     },
     {
         "id": "id_card",
-        "text": "Jeder von euch bekommt seinen eigenen Mond-Ausweis! Schreib deinen Berufswunsch, Nachbarwunsch und Gebäudewunsch jetzt in die Kommentare!"
+        "text": "Jeder Follower bekommt außerdem seinen eigenen Mond-Ausweis! Schreib deinen Berufswunsch und Nachbarwunsch jetzt in die Kommentare!"
     },
     {
         "id": "vote_abc",
-        "text": "Was bauen wir von unseren fünfhundert Euro zuerst? A: Das große Power-Sauger-Lager, B: Den zweiten Kapsel-Ring für neue Follower, oder C: Den ersten Mond-Dönerladen? Schreib A, B oder C in die Kommentare!"
+        "text": "Was bauen wir in Teil zwei von unseren fünfhundert Euro zuerst? A: Das Power-Sauger-Lager, B: Die Staub-Raffinerie für doppeltes Geld, oder C: Den ersten Mond-Dönerladen? Schreib A, B oder C in die Kommentare!"
     },
     {
         "id": "mystery_outro",
-        "text": "Doch wartet mal: Beim Fegen haben wir unter dem Staub etwas gefunden. Einen gesperrten Ausweis: Sektor Sieben – Zutritt nur für Personal! Irgendjemand war schon vor uns auf dem Mond... Fortsetzung folgt!"
+        "text": "Doch wartet mal: Unter dem Staub hab ich gerade diesen gesperrten Ausweis gefunden: Sektor Sieben – Zutritt nur für Personal! Irgendjemand war schon vor uns hier oben... Folg rein für Teil zwei!"
     }
 ]
 
-VOICE = "de-DE-KillianNeural"
-RATE = "+38%"
+# Native German conversational male voice on ElevenLabs ("Charlie Chatlin - Real & Casual")
+VOICE_ID = "vmVmHDKBkkCgbLVIOJRb"
+MODEL_ID = "eleven_multilingual_v2"
 
-async def generate_tts():
+def generate_elevenlabs_tts():
+    load_env()
+    api_key = os.environ.get("ELEVENLABS_API_KEY")
+    if not api_key:
+        raise RuntimeError("Missing ELEVENLABS_API_KEY in .env")
+
     full_text = " ".join(seg["text"] for seg in SEGMENTS)
-    communicate = edge_tts.Communicate(full_text, VOICE, rate=RATE, boundary="WordBoundary")
-    
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}/with-timestamps"
+    payload = {
+        "text": full_text,
+        "model_id": MODEL_ID,
+        "voice_settings": {
+            "stability": 0.42,
+            "similarity_boost": 0.82,
+            "style": 0.40,
+            "use_speaker_boost": True,
+            "speed": 1.20
+        }
+    }
+    print("Requesting ElevenLabs TTS with character-level timestamps...")
+    r = requests.post(
+        url,
+        headers={"xi-api-key": api_key, "Content-Type": "application/json"},
+        json=payload,
+        timeout=60
+    )
+    if r.status_code != 200:
+        raise RuntimeError(f"ElevenLabs API error {r.status_code}: {r.text}")
+
+    data = r.json()
+    mp3_bytes = base64.b64decode(data["audio_base64"])
     mp3_path = os.path.join(BUILD_DIR, "voice_raw.mp3")
-    words = []
-    
     with open(mp3_path, "wb") as f:
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                f.write(chunk["data"])
-            elif chunk["type"] == "WordBoundary":
-                start_s = chunk["offset"] / 10_000_000.0
-                dur_s = chunk["duration"] / 10_000_000.0
-                words.append({
-                    "word": chunk["text"],
-                    "start": round(start_s, 3),
-                    "end": round(start_s + dur_s, 3)
-                })
-    
-    tokens = [t for t in full_text.split() if t not in ("–", "—", "-")]
-    ti = 0
-    for w in words:
-        clean_w = re.sub(r"[^\wÄÖÜäöüß]", "", w["word"])
-        for look in range(ti, min(ti + 4, len(tokens))):
-            clean_t = re.sub(r"[^\wÄÖÜäöüß]", "", tokens[look])
-            if clean_w.lower() == clean_t.lower() or clean_w.lower() in clean_t.lower():
-                w["word"] = tokens[look]
-                ti = look + 1
-                break
+        f.write(mp3_bytes)
+
+    # Convert ElevenLabs exact character timestamps into exact word timestamps
+    align = data["alignment"]
+    chars = align["characters"]
+    starts = align["character_start_times_seconds"]
+    ends = align["character_end_times_seconds"]
+
+    words = []
+    cur_chars = []
+    w_start = None
+    w_end = None
+
+    for ch, s_t, e_t in zip(chars, starts, ends):
+        if ch.isspace():
+            if cur_chars:
+                word_str = "".join(cur_chars)
+                if word_str not in ("–", "—", "-"):
+                    words.append({
+                        "word": word_str,
+                        "start": round(float(w_start), 3),
+                        "end": round(float(w_end), 3)
+                    })
+                cur_chars = []
+                w_start = None
+                w_end = None
+        else:
+            if w_start is None:
+                w_start = s_t
+            w_end = e_t
+            cur_chars.append(ch)
+
+    if cur_chars:
+        word_str = "".join(cur_chars)
+        if word_str not in ("–", "—", "-"):
+            words.append({
+                "word": word_str,
+                "start": round(float(w_start), 3),
+                "end": round(float(w_end), 3)
+            })
 
     with open(os.path.join(BUILD_DIR, "words.json"), "w", encoding="utf-8") as wf:
         json.dump(words, wf, ensure_ascii=False, indent=2)
-        
-    print(f"Generated TTS with {len(words)} words. Last word ends at {words[-1]['end'] if words else 0:.2f}s")
+
+    print(f"ElevenLabs TTS complete: {len(words)} words, exact speech end = {words[-1]['end']:.2f}s")
     return mp3_path, words
 
 def make_sfx_track(duration_sec, words, sample_rate=44100):
@@ -134,11 +190,10 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
         env = np.exp(-2.2 * t / dur_s) * np.minimum(1.0, t / 0.02)
         audio[i0:i0+n] += vol * sig * env
 
-    # Subtle energetic pulse background
     t_all = np.linspace(0, duration_sec, n_samples, endpoint=False)
     pad = (
-        0.014 * np.sin(2 * np.pi * 110.0 * t_all)
-        + 0.010 * np.sin(2 * np.pi * 164.81 * t_all)
+        0.012 * np.sin(2 * np.pi * 110.0 * t_all)
+        + 0.008 * np.sin(2 * np.pi * 164.81 * t_all)
     )
     audio += pad
 
@@ -148,50 +203,44 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
                 return w["start"]
         return None
 
-    t_overview = find_word_time("fegen", 2.5) or 4.2
-    t_stages = find_word_time("Zwölf", 8.0) or 13.0
-    t_terminal = find_word_time("verkaufen", 18.0) or 22.0
-    t_budget = find_word_time("fünfhundert", 22.0) or 27.0
-    t_punkt = find_word_time("Ausbau-Punkt", 26.0) or 31.5
-    t_ausweis = find_word_time("Mond-Ausweis", 30.0) or 35.5
-    t_vote = find_word_time("bauen", 38.0) or 42.5
-    t_opt_a = find_word_time("Power-Sauger", 40.0) or 45.0
-    t_opt_b = find_word_time("Kapsel-Ring", 42.0) or 47.2
-    t_opt_c = find_word_time("Mond-Dönerladen", 44.0) or 49.5
-    t_mystery = find_word_time("wartet", 48.0) or 52.5
-    t_sektor7 = find_word_time("Sektor", 50.0) or 55.5
-    t_outro = find_word_time("Fortsetzung", 54.0) or 58.8
+    t_overview = find_word_time("Noch", 2.5) or 6.0
+    t_stages = find_word_time("Deine", 12.0) or 15.6
+    t_terminal = find_word_time("fege", 18.0) or 22.2
+    t_budget = find_word_time("fünfhundert", 22.0) or 27.4
+    t_punkt = find_word_time("Ausbau-Punkt", 26.0) or 29.2
+    t_ausweis = find_word_time("Mond-Ausweis", 30.0) or 32.6
+    t_vote = find_word_time("Was", 34.0) or 37.0
+    t_opt_a = find_word_time("Power-Sauger", 38.0) or 40.7
+    t_opt_b = find_word_time("Staub-Raffinerie", 40.0) or 42.7
+    t_opt_c = find_word_time("Mond-Dönerladen", 43.0) or 46.1
+    t_mystery = find_word_time("wartet", 47.0) or 50.4
+    t_sektor7 = find_word_time("Sektor", 50.0) or 54.0
+    t_outro = find_word_time("Folg", 55.0) or 59.3
 
-    # Intro pop + Camera Whip-Zoom Whoosh
-    add_tone(0.05, 0.22, 440, 880, vol=0.16, wave_type="triangle")
-    add_whoosh(t_overview - 0.25, 0.45, vol=0.20)
+    add_tone(0.05, 0.22, 440, 880, vol=0.14, wave_type="triangle")
+    add_whoosh(t_overview - 0.2, 0.42, vol=0.18)
 
-    # 12-Stages Grid Rapid Pop-in Arpeggio (like @das.letzte.camp!)
-    add_whoosh(t_stages - 0.3, 0.35, vol=0.16)
+    add_whoosh(t_stages - 0.25, 0.35, vol=0.15)
     for i in range(12):
         freq = 380 + i * 48
-        add_tone(t_stages + 0.1 + i * 0.28, 0.12, freq, freq * 1.25, vol=0.13, wave_type="triangle")
+        add_tone(t_stages + 0.08 + i * 0.26, 0.11, freq, freq * 1.25, vol=0.12, wave_type="triangle")
 
-    # Dust Counter Card & +1 Point pops
-    add_whoosh(t_terminal - 0.25, 0.35, vol=0.16)
+    add_whoosh(t_terminal - 0.2, 0.35, vol=0.15)
     for i in range(3):
-        add_tone(t_budget - 0.4 + i * 0.35, 0.16, 880 + i * 220, 1100 + i * 220, vol=0.15, wave_type="sine")
-    add_tone(t_punkt, 0.22, 587.33, 1174.66, vol=0.16, wave_type="triangle")
+        add_tone(t_budget - 0.3 + i * 0.32, 0.15, 880 + i * 220, 1100 + i * 220, vol=0.14, wave_type="sine")
+    add_tone(t_punkt, 0.2, 587.33, 1174.66, vol=0.14, wave_type="triangle")
 
-    # ID Card Pop
-    add_whoosh(t_ausweis - 0.3, 0.35, vol=0.17)
-    add_tone(t_ausweis, 0.2, 523.25, 783.99, vol=0.14, wave_type="triangle")
+    add_whoosh(t_ausweis - 0.25, 0.35, vol=0.15)
+    add_tone(t_ausweis, 0.2, 523.25, 783.99, vol=0.13, wave_type="triangle")
 
-    # Vote Cards A, B, C
-    add_whoosh(t_vote - 0.25, 0.35, vol=0.16)
+    add_whoosh(t_vote - 0.2, 0.35, vol=0.15)
     for ct, freq in [(t_opt_a, 523.25), (t_opt_b, 659.25), (t_opt_c, 783.99)]:
-        add_tone(ct - 0.1, 0.22, freq * 0.85, freq, vol=0.16, wave_type="triangle")
+        add_tone(ct - 0.08, 0.2, freq * 0.85, freq, vol=0.15, wave_type="triangle")
 
-    # Mystery Discovery Sub-Bass Boom + Secret Stamp Hit
-    add_whoosh(t_mystery - 0.2, 0.4, vol=0.18)
-    add_mystery_boom(t_mystery, 2.4, vol=0.24)
-    add_mystery_boom(t_sektor7 - 0.1, 2.0, vol=0.22)
-    add_whoosh(t_outro - 0.2, 0.38, vol=0.20)
+    add_whoosh(t_mystery - 0.2, 0.4, vol=0.17)
+    add_mystery_boom(t_mystery, 2.2, vol=0.22)
+    add_mystery_boom(t_sektor7 - 0.1, 1.8, vol=0.20)
+    add_whoosh(t_outro - 0.2, 0.36, vol=0.18)
 
     audio = np.clip(audio, -0.95, 0.95)
     sfx_wav = os.path.join(BUILD_DIR, "sfx.wav")
@@ -216,10 +265,10 @@ def make_sfx_track(duration_sec, words, sample_rate=44100):
         "t_outro": t_outro,
     }
 
-async def main():
-    mp3_path, words = await generate_tts()
+def main():
+    mp3_path, words = generate_elevenlabs_tts()
     raw_end = words[-1]["end"] if words else 58.5
-    target_duration = max(59.5, round(raw_end + 0.8, 2))
+    target_duration = round(raw_end + 0.8, 2)
     sfx_wav, markers = make_sfx_track(target_duration, words)
 
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
@@ -229,7 +278,7 @@ async def main():
         "-i", mp3_path,
         "-i", sfx_wav,
         "-filter_complex",
-        f"[0:a]apad=whole_dur={target_duration}[v];[1:a]volume=1.0[s];[v][s]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[out]",
+        f"[0:a]apad=whole_dur={target_duration}[v];[1:a]volume=0.85[s];[v][s]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[out]",
         "-map", "[out]",
         "-t", f"{target_duration:.2f}",
         "-c:a", "aac", "-b:a", "192k",
@@ -247,4 +296,4 @@ async def main():
     print("Audio mix complete:", meta)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
